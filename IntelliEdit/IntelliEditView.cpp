@@ -73,7 +73,7 @@ END_MESSAGE_MAP()
 
 // CIntelliEditView construction/destruction
 
-CIntelliEditView::CIntelliEditView() noexcept
+CIntelliEditView::CIntelliEditView() noexcept : m_pCLexer{ nullptr }
 {
 	LoadMarginSettings();
 }
@@ -130,11 +130,11 @@ void CIntelliEditView::OnInitialUpdate()
 
 	auto& rCtrl{ GetCtrl() };
 
-	//Setup the C++ Lexer
+	// Setup the C++ Lexer
 	rCtrl.SetILexer(m_pCLexer);
 	rCtrl.SetKeyWords(0, g_cppKeyWords);
 
-	//Setup styles
+	// Setup styles
 	SetAStyle(static_cast<int>(Scintilla::StylesCommon::Default), RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 11, "Verdana");
 	rCtrl.StyleClearAll();
 	SetAStyle(SCE_C_DEFAULT, RGB(0, 0, 0));
@@ -152,14 +152,14 @@ void CIntelliEditView::OnInitialUpdate()
 	SetAStyle(SCE_C_PREPROCESSOR, RGB(0x80, 0, 0));
 	SetAStyle(SCE_C_OPERATOR, RGB(0x80, 0x80, 0));
 
-	//Setup folding
+	// Setup folding
 	rCtrl.SetMarginWidthN(2, 16);
 	rCtrl.SetMarginSensitiveN(2, TRUE);
 	rCtrl.SetMarginTypeN(2, Scintilla::MarginType::Symbol);
 	rCtrl.SetMarginMaskN(2, Scintilla::MaskFolders);
 	rCtrl.SetSCIProperty(_T("fold"), _T("1"));
 
-	//Setup markers
+	// Setup markers
 	DefineMarker(static_cast<int>(Scintilla::MarkerOutline::FolderOpen), Scintilla::MarkerSymbol::Minus, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0xFF));
 	DefineMarker(static_cast<int>(Scintilla::MarkerOutline::Folder), Scintilla::MarkerSymbol::Plus, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
 	DefineMarker(static_cast<int>(Scintilla::MarkerOutline::FolderSub), Scintilla::MarkerSymbol::Empty, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
@@ -171,11 +171,14 @@ void CIntelliEditView::OnInitialUpdate()
 	//Setup auto completion
 	rCtrl.AutoCSetSeparator(10); //Use a separator of line feed
 
-	//Setup call tips
+	// Setup call tips
 	rCtrl.SetMouseDwellTime(1000);
 
-	//Enable Multiple selection
+	// Enable Multiple selection
 	rCtrl.SetMultipleSelection(TRUE);
+
+	// Show line numbers
+	rCtrl.SetMarginWidthN(0, 32);
 
 #ifdef _DEBUG
 	AfxDump(this);
@@ -558,8 +561,6 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//Create the C++ Lexer
 #pragma warning(suppress: 26429)
-	// const CIntelliEditApp* theApp{ dynamic_cast<CIntelliEditApp*>(AfxGetApp()) };
-	ASSERT(theApp != nullptr);
 	m_pCLexer = theApp.m_pCreateLexer("cpp");
 	if (m_pCLexer == nullptr)
 		return -1;

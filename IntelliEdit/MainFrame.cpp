@@ -18,7 +18,7 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "pch.h"
 #include "framework.h"
 #include "IntelliEdit.h"
-
+#include "ScintillaDocView.h"
 #include "MainFrame.h"
 
 #ifdef _DEBUG
@@ -39,7 +39,28 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(IDC_ISSUES, &CMainFrame::OnIssues)
 	ON_COMMAND(IDC_DISCUSSIONS, &CMainFrame::OnDiscussions)
 	ON_COMMAND(IDC_WIKI, &CMainFrame::OnWiki)
+	ON_WM_SETTINGCHANGE()
+	ON_WM_SYSCOLORCHANGE()
+	ON_WM_PALETTECHANGED()
+	ON_WM_QUERYNEWPALETTE()
+	ON_UPDATE_COMMAND_UI(ID_INDICATOR_LINE, &CMainFrame::OnUpdateLine)
+	ON_UPDATE_COMMAND_UI(ID_INDICATOR_STYLE, &CMainFrame::OnUpdateStyle)
+	ON_UPDATE_COMMAND_UI(ID_INDICATOR_FOLD, &CMainFrame::OnUpdateFold)
+	ON_UPDATE_COMMAND_UI(ID_INDICATOR_OVR, &CMainFrame::OnUpdateInsert)
+	ON_WM_DROPFILES()
 END_MESSAGE_MAP()
+
+std::array<UINT, 8> g_Indicators
+{
+	ID_SEPARATOR, //status line indicator
+	ID_INDICATOR_FOLD,
+	ID_INDICATOR_STYLE,
+	ID_INDICATOR_LINE,
+	ID_INDICATOR_OVR,
+	ID_INDICATOR_CAPS,
+	ID_INDICATOR_NUM,
+	ID_INDICATOR_SCRL
+};
 
 // CMainFrame construction/destruction
 
@@ -57,8 +78,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	BOOL bNameValid;
-
 	CMDITabInfo mdiTabParams;
 	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ONENOTE; // other styles available...
 	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
@@ -70,20 +89,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndRibbonBar.Create(this);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
 
-	if (!m_wndStatusBar.Create(this))
+	//Create the status bar
+#pragma warning(suppress: 26472)
+	if (!m_wndStatusBar.Create(this) /* || !m_wndStatusBar.SetIndicators(g_Indicators.data(), static_cast<int>(g_Indicators.size()))*/)
 	{
-		TRACE0("Failed to create status bar\n");
-		return -1;      // fail to create
+		TRACE(_T("Failed to create status bar\n"));
+		return -1;
 	}
-
-	CString strTitlePane1;
-	CString strTitlePane2;
-	bNameValid = strTitlePane1.LoadString(IDS_STATUS_PANE1);
-	ASSERT(bNameValid);
-	bNameValid = strTitlePane2.LoadString(IDS_STATUS_PANE2);
-	ASSERT(bNameValid);
-	m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE1, strTitlePane1, TRUE), strTitlePane1);
-	m_wndStatusBar.AddExtendedElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE2, strTitlePane2, TRUE), strTitlePane2);
 
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode(DT_SMART);
@@ -167,4 +179,192 @@ void CMainFrame::OnDiscussions()
 void CMainFrame::OnWiki()
 {
 	::ShellExecute(GetSafeHwnd(), _T("open"), _T("https://github.com/mihaimoga/IntelliEdit/wiki"), nullptr, nullptr, SW_SHOW);
+}
+#pragma warning(suppress: 26434)
+void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
+{
+    //Validate our parameters
+    const CWinApp* pApp{ AfxGetApp() };
+#pragma warning(suppress: 26496)
+    AFXASSUME(pApp != nullptr);
+
+    //Pass the message on to all scintilla control
+    POSITION posTemplate{ pApp->GetFirstDocTemplatePosition() };
+    if (posTemplate != nullptr)
+    {
+#pragma warning(suppress: 26429)
+        const CDocTemplate* pTemplate{ pApp->GetNextDocTemplate(posTemplate) };
+        ASSERT(pTemplate != nullptr);
+        POSITION posDoc{ pTemplate->GetFirstDocPosition() };
+        if (posDoc != nullptr)
+        {
+            const CDocument* pDocument{ pTemplate->GetNextDoc(posDoc) };
+            if (pDocument != nullptr)
+            {
+                POSITION posView{ pDocument->GetFirstViewPosition() };
+                if (posView != nullptr)
+                {
+#pragma warning(suppress: 26429 26466)
+                    auto pView{ static_cast<Scintilla::CScintillaView*>(pDocument->GetNextView(posView)) };
+                    ASSERT(pView != nullptr);
+                    // if (pView->IsKindOf(RUNTIME_CLASS(Scintilla::CScintillaView)))
+                    {
+                        const MSG* pMsg{ GetCurrentMessage() };
+                        pView->GetCtrl().SendMessage(WM_SETTINGCHANGE, pMsg->wParam, pMsg->lParam);
+                    }
+                }
+            }
+        }
+    }
+
+    //Let the base class do its thing
+    __super::OnSettingChange(uFlags, lpszSection);
+}
+
+#pragma warning(suppress: 26434)
+void CMainFrame::OnSysColorChange()
+{
+    const CWinApp* pApp{ AfxGetApp() };
+#pragma warning(suppress: 26496)
+    AFXASSUME(pApp != nullptr);
+
+    //Pass the message on to all scintilla control
+    POSITION posTemplate{ pApp->GetFirstDocTemplatePosition() };
+    if (posTemplate != nullptr)
+    {
+#pragma warning(suppress: 26429)
+        const CDocTemplate* pTemplate{ pApp->GetNextDocTemplate(posTemplate) };
+        ASSERT(pTemplate != nullptr);
+        POSITION posDoc{ pTemplate->GetFirstDocPosition() };
+        if (posDoc != nullptr)
+        {
+            const CDocument* pDocument{ pTemplate->GetNextDoc(posDoc) };
+            if (pDocument != nullptr)
+            {
+                POSITION posView{ pDocument->GetFirstViewPosition() };
+                if (posView != nullptr)
+                {
+#pragma warning(suppress: 26429 26466)
+                    auto pView{ static_cast<Scintilla::CScintillaView*>(pDocument->GetNextView(posView)) };
+                    ASSERT(pView != nullptr);
+                    // if (pView->IsKindOf(RUNTIME_CLASS(Scintilla::CScintillaView)))
+                    {
+                        const MSG* pMsg{ GetCurrentMessage() };
+                        pView->GetCtrl().SendMessage(WM_SYSCOLORCHANGE, pMsg->wParam, pMsg->lParam);
+                    }
+                }
+            }
+        }
+    }
+
+    //Let the base class do its thing
+    __super::OnSysColorChange();
+}
+
+#pragma warning(suppress: 26434)
+void CMainFrame::OnPaletteChanged(CWnd* pFocusWnd)
+{
+    const CWinApp* pApp{ AfxGetApp() };
+#pragma warning(suppress: 26496)
+    AFXASSUME(pApp != nullptr);
+
+    //Pass the message on to all scintilla control
+    POSITION posTemplate{ pApp->GetFirstDocTemplatePosition() };
+    if (posTemplate != nullptr)
+    {
+#pragma warning(suppress: 26429)
+        const CDocTemplate* pTemplate{ pApp->GetNextDocTemplate(posTemplate) };
+        ASSERT(pTemplate != nullptr);
+        POSITION posDoc{ pTemplate->GetFirstDocPosition() };
+        if (posDoc != nullptr)
+        {
+            const CDocument* pDocument{ pTemplate->GetNextDoc(posDoc) };
+            if (pDocument != nullptr)
+            {
+                POSITION posView{ pDocument->GetFirstViewPosition() };
+                if (posView != nullptr)
+                {
+#pragma warning(suppress: 26429 26466)
+                    auto pView{ static_cast<Scintilla::CScintillaView*>(pDocument->GetNextView(posView)) };
+                    ASSERT(pView != nullptr);
+                    // if (pView->IsKindOf(RUNTIME_CLASS(Scintilla::CScintillaView)))
+                    {
+                        const MSG* pMsg{ GetCurrentMessage() };
+                        pView->GetCtrl().SendMessage(WM_PALETTECHANGED, pMsg->wParam, pMsg->lParam);
+                    }
+                }
+            }
+        }
+    }
+
+    //Let the base class do its thing
+    __super::OnPaletteChanged(pFocusWnd);
+}
+
+#pragma warning(suppress: 26434)
+BOOL CMainFrame::OnQueryNewPalette()
+{
+    const CWinApp* pApp{ AfxGetApp() };
+#pragma warning(suppress: 26496)
+    AFXASSUME(pApp);
+
+    //Pass the message on to all scintilla control
+    POSITION posTemplate{ pApp->GetFirstDocTemplatePosition() };
+    if (posTemplate != nullptr)
+    {
+#pragma warning(suppress: 26429)
+        const CDocTemplate* pTemplate{ pApp->GetNextDocTemplate(posTemplate) };
+        ASSERT(pTemplate != nullptr);
+        POSITION posDoc{ pTemplate->GetFirstDocPosition() };
+        if (posDoc != nullptr)
+        {
+            const CDocument* pDocument{ pTemplate->GetNextDoc(posDoc) };
+            if (pDocument != nullptr)
+            {
+                POSITION posView{ pDocument->GetFirstViewPosition() };
+                if (posView != nullptr)
+                {
+#pragma warning(suppress: 26429 26466)
+                    auto pView{ static_cast<Scintilla::CScintillaView*>(pDocument->GetNextView(posView)) };
+                    ASSERT(pView != nullptr);
+                    // if (pView->IsKindOf(RUNTIME_CLASS(Scintilla::CScintillaView)))
+                    {
+                        const MSG* pMsg{ GetCurrentMessage() };
+                        pView->GetCtrl().SendMessage(WM_QUERYNEWPALETTE, pMsg->wParam, pMsg->lParam);
+                    }
+                }
+            }
+        }
+    }
+
+    //Let the base class do its thing
+    return __super::OnQueryNewPalette();
+}
+
+#pragma warning(suppress: 26429)
+void CMainFrame::OnUpdateInsert(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486)
+    pCmdUI->SetText(_T(""));
+}
+
+#pragma warning(suppress: 26429)
+void CMainFrame::OnUpdateStyle(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486)
+    pCmdUI->SetText(_T(""));
+}
+
+#pragma warning(suppress: 26429)
+void CMainFrame::OnUpdateFold(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486)
+    pCmdUI->SetText(_T(""));
+}
+
+#pragma warning(suppress: 26429)
+void CMainFrame::OnUpdateLine(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486)
+    pCmdUI->SetText(_T(""));
 }
