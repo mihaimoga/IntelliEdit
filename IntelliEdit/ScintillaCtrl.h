@@ -470,6 +470,8 @@ namespace Scintilla
 		[[nodiscard]] int AutoCGetMaxWidth();
 		void AutoCSetMaxHeight(_In_ int rowCount);
 		[[nodiscard]] int AutoCGetMaxHeight();
+		void AutoCSetStyle(_In_ int style);
+		[[nodiscard]] int AutoCGetStyle();
 		void SetIndent(_In_ int indentSize);
 		[[nodiscard]] int GetIndent();
 		void SetUseTabs(_In_ BOOL useTabs);
@@ -860,6 +862,7 @@ namespace Scintilla
 		void SetLayoutThreads(_In_ int threads);
 		[[nodiscard]] int GetLayoutThreads();
 		void CopyAllowLine();
+		void CutAllowLine();
 		[[nodiscard]] const char* GetCharacterPointer();
 		[[nodiscard]] void* GetRangePointer(_In_ Position start, _In_ Position lengthRange);
 		[[nodiscard]] Position GetGapPosition();

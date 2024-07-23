@@ -135,7 +135,7 @@ void CIntelliEditView::OnInitialUpdate()
 	rCtrl.SetKeyWords(0, g_cppKeyWords);
 
 	// Setup styles
-	SetAStyle(static_cast<int>(Scintilla::StylesCommon::Default), RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 11, "Verdana");
+	SetAStyle(static_cast<int>(Scintilla::StylesCommon::Default), RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 11, "Consolas");
 	rCtrl.StyleClearAll();
 	SetAStyle(SCE_C_DEFAULT, RGB(0, 0, 0));
 	SetAStyle(SCE_C_COMMENT, RGB(0, 0x80, 0));
