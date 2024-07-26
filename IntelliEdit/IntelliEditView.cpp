@@ -49,6 +49,18 @@ const TCHAR* g_cppKeywords
 	_T("try typedef unsigned using virtual void while xor xor_eq")
 };
 
+const TCHAR* g_csKeywords
+{
+	_T("abstract as base bool break byte case catch char checked class const ")
+	_T("continue decimal default delegate do double else enum event explicit ")
+	_T("extern false finally fixed float for foreach goto if implicit in int ")
+	_T("interface internal is lock long namespace new null object operator ")
+	_T("out override params private protected public readonly ref return sbyte ")
+	_T("sealed short sizeof stackalloc static string struct switch this throw ")
+	_T("true try typeof uint ulong unchecked unsafe ushort using virtual void ")
+	_T("volatile while")
+};
+
 const TCHAR* g_javaKeywords
 {
 	/* https://www.w3schools.com/java/java_ref_keywords.asp */
@@ -185,19 +197,28 @@ void CIntelliEditView::OnInitialUpdate()
 	}
 	else
 	{
-		if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+		if (_tcsicmp(lpszExtension, _T(".cs")) == 0)
 		{
 			// Setup the C++ Lexer
 			rCtrl.SetILexer(m_cppLexer);
-			rCtrl.SetKeyWords(0, g_javaKeywords);
+			rCtrl.SetKeyWords(0, g_csKeywords);
 		}
 		else
 		{
-			if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+			if (_tcsicmp(lpszExtension, _T(".java")) == 0)
 			{
-				// Setup the Python Lexer
-				rCtrl.SetILexer(m_pyLexer);
-				rCtrl.SetKeyWords(0, g_pyKeywords);
+				// Setup the C++ Lexer
+				rCtrl.SetILexer(m_cppLexer);
+				rCtrl.SetKeyWords(0, g_javaKeywords);
+			}
+			else
+			{
+				if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+				{
+					// Setup the Python Lexer
+					rCtrl.SetILexer(m_pyLexer);
+					rCtrl.SetKeyWords(0, g_pyKeywords);
+				}
 			}
 		}
 	}
