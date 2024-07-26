@@ -34,7 +34,8 @@ public:
 	CIntelliEditDoc* GetDocument() const;
 protected:
 	//Member variables
-	Scintilla::ILexer5* m_pCLexer;
+	Scintilla::ILexer5* m_cppLexer;
+	Scintilla::ILexer5* m_pyLexer;
 
 // Operations
 public:

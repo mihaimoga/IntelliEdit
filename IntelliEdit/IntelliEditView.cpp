@@ -30,15 +30,43 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
-const TCHAR* g_cppKeyWords
-{ _T("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break ")
- _T("case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue ")
- _T("co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for ")
- _T("friend goto if inline int long mutable namespace new noexcept not not_eq nullptr ")
- _T("operator or or_eq private protected public ")
- _T("reflexpr register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch synchronized ")
- _T("template this thread_local throw true try typedef typeid typename union unsigned using ")
- _T("virtual void volatile wchar_t while xor xor_eq") };
+const TCHAR* g_cppKeywords
+{
+	/* _T("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break ")
+	_T("case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue ")
+	_T("co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for ")
+	_T("friend goto if inline int long mutable namespace new noexcept not not_eq nullptr ")
+	_T("operator or or_eq private protected public ")
+	_T("reflexpr register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch synchronized ")
+	_T("template this thread_local throw true try typedef typeid typename union unsigned using ")
+	_T("virtual void volatile wchar_t while xor xor_eq") */
+
+	/* https://www.w3schools.com/cpp/cpp_ref_keywords.asp */
+	_T("and and_eq bitand bitor bool break case catch char class compl const ")
+	_T("continue default delete do double else enum false float for friend goto ")
+	_T("if int long namespace new not not_eq or or_eq private protected public ")
+	_T("return short signed sizeof static struct switch template this throw true ")
+	_T("try typedef unsigned using virtual void while xor xor_eq")
+};
+
+const TCHAR* g_javaKeywords
+{
+	/* https://www.w3schools.com/java/java_ref_keywords.asp */
+	_T("abstract assert boolean break byte case catch char class continue const ")
+	_T("default do double else enum exports extends final finally float for goto ")
+	_T("if implements import instanceof int interface long module native new ")
+	_T("package private protected public requires return short static strictfp ")
+	_T("super switch synchronized this throw throws transient try var void ")
+	_T("volatile while")
+};
+
+const TCHAR* g_pyKeywords
+{
+	/* https://www.w3schools.com/python/python_ref_keywords.asp */
+	_T("and as assert break class continue def del elif else except False finally ")
+	_T("for from global if import in is lambda None nonlocal not or pass raise ")
+	_T("return True try while with yield")
+};
 
 // CIntelliEditView
 
@@ -73,7 +101,7 @@ END_MESSAGE_MAP()
 
 // CIntelliEditView construction/destruction
 
-CIntelliEditView::CIntelliEditView() noexcept : m_pCLexer{ nullptr }
+CIntelliEditView::CIntelliEditView() noexcept : m_cppLexer { nullptr }, m_pyLexer { nullptr }
 {
 	LoadMarginSettings();
 }
@@ -125,14 +153,54 @@ void CIntelliEditView::DefineMarker(int marker, Scintilla::MarkerSymbol markerTy
 
 void CIntelliEditView::OnInitialUpdate()
 {
+	TCHAR lpszDrive[_MAX_DRIVE] = { 0 };
+	TCHAR lpszFolder[_MAX_DIR] = { 0 };
+	TCHAR lpszFileName[_MAX_FNAME] = { 0 };
+	TCHAR lpszExtension[_MAX_EXT] = { 0 };
+
 	//Let the base class do its thing
 	__super::OnInitialUpdate();
 
 	auto& rCtrl{ GetCtrl() };
 
-	// Setup the C++ Lexer
-	rCtrl.SetILexer(m_pCLexer);
-	rCtrl.SetKeyWords(0, g_cppKeyWords);
+	CIntelliEditDoc* pDocument = GetDocument();
+	ASSERT_VALID(pDocument);
+	CString strTempPath = pDocument->GetPathName();
+	strTempPath.MakeLower();
+	_tsplitpath_s(strTempPath,
+		lpszDrive, _MAX_DRIVE,
+		lpszFolder, _MAX_DIR,
+		lpszFileName, _MAX_FNAME,
+		lpszExtension, _MAX_EXT);
+
+	if ((_tcsicmp(lpszExtension, _T(".c")) == 0) ||
+		(_tcsicmp(lpszExtension, _T(".cpp")) == 0) ||
+		(_tcsicmp(lpszExtension, _T(".cxx")) == 0) ||
+		(_tcsicmp(lpszExtension, _T(".h")) == 0) ||
+		(_tcsicmp(lpszExtension, _T(".hpp")) == 0))
+	{
+		// Setup the C++ Lexer
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_cppKeywords);
+	}
+	else
+	{
+		if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+		{
+			// Setup the C++ Lexer
+			rCtrl.SetILexer(m_cppLexer);
+			rCtrl.SetKeyWords(0, g_javaKeywords);
+		}
+		else
+		{
+			if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+			{
+				// Setup the Python Lexer
+				rCtrl.SetILexer(m_pyLexer);
+				rCtrl.SetKeyWords(0, g_pyKeywords);
+			}
+		}
+	}
 
 	// Setup styles
 	SetAStyle(static_cast<int>(Scintilla::StylesCommon::Default), RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 11, "Consolas");
@@ -561,9 +629,21 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//Create the C++ Lexer
 #pragma warning(suppress: 26429)
-	m_pCLexer = theApp.m_pCreateLexer("cpp");
-	if (m_pCLexer == nullptr)
-		return -1;
+	if (m_cppLexer == nullptr)
+	{
+		m_cppLexer = theApp.m_pCreateLexer("cpp");
+		if (m_cppLexer == nullptr)
+			return -1;
+	}
+
+	//Create the Python Lexer
+#pragma warning(suppress: 26429)
+	if (m_pyLexer == nullptr)
+	{
+		m_pyLexer = theApp.m_pCreateLexer("python");
+		if (m_pyLexer == nullptr)
+			return -1;
+	}
 
 	return 0;
 }
