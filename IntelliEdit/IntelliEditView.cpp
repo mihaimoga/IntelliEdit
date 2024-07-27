@@ -80,6 +80,40 @@ const TCHAR* g_pyKeywords
 	_T("return True try while with yield")
 };
 
+const TCHAR* g_sqlKeywords
+{
+	/* https://www.w3schools.com/sql/sql_ref_keywords.asp */
+	_T("add constraint all alter all and any as asc backup between by case check ")
+	_T("column constraint create database default delete desc distinct drop exec ")
+	_T("exists foreign from full group having if in into index inner insert is join ")
+	_T("left like limit not null or order outer primary key procedure replace right ")
+	_T("rownum select set table top truncate union unique update values view where ")
+	/* MySQL Data Types */
+	_T("char varchar binary varbinary tinyblob tinytext text blob mediumtext ")
+	_T("mediumblob longtext longblob enum set bit tinyint bool boolean smallin ")
+	_T("mediumint int integer bigint float double precision decimal dec date ")
+	_T("datetime timestamp time year references ")
+	/* MySQL String Functions */
+	_T("ascii char_length character_length concat concat_ws field find_in_set ")
+	_T("format instr lcase left length locate lower lpad ltrim mid position ")
+	_T("repeat replace reverse right rpad rtrim space strcmp substr substring ")
+	_T("substring_index trim ucase upper ")
+	/* MySQL Numeric Functions */
+	_T("abs acos asin atan atan2 avg ceil ceiling cos cot count degrees div exp ")
+	_T("floor greatest least ln log log10 log2 max min mod pi pow power radians ")
+	_T("rand round sign sin sqrt sum tan truncate ")
+	/* MySQL Date Functions */
+	_T("adddate addtime curdate current_date current_time current_timestamp curtime ")
+	_T("date datediff date_add date_format date_sub day dayname dayofmonth dayofweek ")
+	_T("dayofyear extract from_days hour last_day localtime localtimestamp makedate ")
+	_T("maketime microsecond minute month monthname now period_add period_diff quarter ")
+	_T("second sec_to_time str_to_date subdate subtime sysdate time time_format ")
+	_T("time_to_sec timediff timestamp to_days week weekday weekofyear year yearweek ")
+	/* MySQL Advanced Functions */
+	_T("bin case cast coalesce connection_id conv convert current_user database ifnull ")
+	_T("isnull last_insert_id nullif session_user system_user user version")
+};
+
 // CIntelliEditView
 
 IMPLEMENT_DYNCREATE(CIntelliEditView, CScintillaView)
@@ -113,7 +147,13 @@ END_MESSAGE_MAP()
 
 // CIntelliEditView construction/destruction
 
-CIntelliEditView::CIntelliEditView() noexcept : m_cppLexer { nullptr }, m_pyLexer { nullptr }
+CIntelliEditView::CIntelliEditView() noexcept : m_cppLexer{ nullptr },
+	m_cssLexer{ nullptr },
+	m_htmlLexer{ nullptr },
+	m_mdLexer{ nullptr },
+	m_pyLexer{ nullptr },
+	m_sqlLexer{ nullptr },
+	m_xmlLexer{ nullptr }
 {
 	LoadMarginSettings();
 }
@@ -205,19 +245,64 @@ void CIntelliEditView::OnInitialUpdate()
 		}
 		else
 		{
-			if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+			if (_tcsicmp(lpszExtension, _T(".css")) == 0)
 			{
-				// Setup the C++ Lexer
-				rCtrl.SetILexer(m_cppLexer);
-				rCtrl.SetKeyWords(0, g_javaKeywords);
+				// Setup the CSS Lexer
+				rCtrl.SetILexer(m_cssLexer);
 			}
 			else
 			{
-				if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+				if ((_tcsicmp(lpszExtension, _T(".htm")) == 0) ||
+					(_tcsicmp(lpszExtension, _T(".html")) == 0) ||
+					(_tcsicmp(lpszExtension, _T(".asp")) == 0) ||
+					(_tcsicmp(lpszExtension, _T(".aspx")) == 0) ||
+					(_tcsicmp(lpszExtension, _T(".php")) == 0))
 				{
-					// Setup the Python Lexer
-					rCtrl.SetILexer(m_pyLexer);
-					rCtrl.SetKeyWords(0, g_pyKeywords);
+					// Setup the HTML Lexer
+					rCtrl.SetILexer(m_htmlLexer);
+				}
+				else
+				{
+					if (_tcsicmp(lpszExtension, _T(".md")) == 0)
+					{
+						// Setup the CSS Lexer
+						rCtrl.SetILexer(m_mdLexer);
+					}
+					else
+					{
+						if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+						{
+							// Setup the C++ Lexer
+							rCtrl.SetILexer(m_cppLexer);
+							rCtrl.SetKeyWords(0, g_javaKeywords);
+						}
+						else
+						{
+							if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+							{
+								// Setup the Python Lexer
+								rCtrl.SetILexer(m_pyLexer);
+								rCtrl.SetKeyWords(0, g_pyKeywords);
+							}
+							else
+							{
+								if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+								{
+									// Setup the SQL Lexer
+									rCtrl.SetILexer(m_sqlLexer);
+									rCtrl.SetKeyWords(0, g_sqlKeywords);
+								}
+								else
+								{
+									if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+									{
+										// Setup the XML Lexer
+										rCtrl.SetILexer(m_xmlLexer);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -644,11 +729,11 @@ std::unique_ptr<Scintilla::CScintillaCtrl> CIntelliEditView::CreateScintillaCont
 #pragma warning(suppress: 26434)
 int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	//Let the base class do its thing
+	// Let the base class do its thing
 	if (__super::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	//Create the C++ Lexer
+	// Create the C++ Lexer
 #pragma warning(suppress: 26429)
 	if (m_cppLexer == nullptr)
 	{
@@ -657,12 +742,57 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			return -1;
 	}
 
-	//Create the Python Lexer
+	// Create the CSS Lexer
+#pragma warning(suppress: 26429)
+	if (m_cssLexer == nullptr)
+	{
+		m_cssLexer = theApp.m_pCreateLexer("css");
+		if (m_cssLexer == nullptr)
+			return -1;
+	}
+
+	// Create the HTML Lexer
+#pragma warning(suppress: 26429)
+	if (m_htmlLexer == nullptr)
+	{
+		m_htmlLexer = theApp.m_pCreateLexer("hypertext");
+		if (m_htmlLexer == nullptr)
+			return -1;
+	}
+
+	// Create the MARKDOWN Lexer
+#pragma warning(suppress: 26429)
+	if (m_mdLexer == nullptr)
+	{
+		m_mdLexer = theApp.m_pCreateLexer("markdown");
+		if (m_mdLexer == nullptr)
+			return -1;
+	}
+
+	// Create the Python Lexer
 #pragma warning(suppress: 26429)
 	if (m_pyLexer == nullptr)
 	{
 		m_pyLexer = theApp.m_pCreateLexer("python");
 		if (m_pyLexer == nullptr)
+			return -1;
+	}
+
+	// Create the SQL Lexer
+#pragma warning(suppress: 26429)
+	if (m_sqlLexer == nullptr)
+	{
+		m_sqlLexer = theApp.m_pCreateLexer("sql");
+		if (m_sqlLexer == nullptr)
+			return -1;
+	}
+
+	// Create the XML Lexer
+#pragma warning(suppress: 26429)
+	if (m_xmlLexer == nullptr)
+	{
+		m_xmlLexer = theApp.m_pCreateLexer("xml");
+		if (m_xmlLexer == nullptr)
 			return -1;
 	}
 
