@@ -299,6 +299,21 @@ void CIntelliEditView::OnInitialUpdate()
 										// Setup the XML Lexer
 										rCtrl.SetILexer(m_xmlLexer);
 									}
+									else
+									{
+										if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+											(_tcsicmp(lpszExtension, _T(".log")) == 0))
+										{
+											rCtrl.SetupDirectAccess();
+											rCtrl.SetILexer(nullptr);
+										}
+										else
+										{
+											// Setup the C++ Lexer
+											rCtrl.SetILexer(m_cppLexer);
+											rCtrl.SetKeyWords(0, g_cppKeywords);
+										}
+									}
 								}
 							}
 						}
