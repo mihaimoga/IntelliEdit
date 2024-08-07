@@ -1,6 +1,6 @@
 ![IntelliEdit.png](IntelliEdit.png)
 
-[IntelliEdit](https://www.moga.doctor/) is an alternative Windows version to the famous Microsoft Notepad!
+[IntelliEdit](https://www.moga.doctor/#intelliedit-top) is an alternative Windows version to the famous Microsoft Notepad!
 
 This application is developed in Microsoft Visual C++, and it is licensed under GNU General Public License v3.0.
 
