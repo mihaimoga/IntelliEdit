@@ -1,5 +1,6 @@
 /* Copyright (C) 2024 Stefan-Mihai MOGA
 This file is part of IntelliEdit application developed by Stefan-Mihai MOGA.
+IntelliEdit is an alternative Windows version to the famous Microsoft Notepad!
 
 IntelliEdit is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Open
