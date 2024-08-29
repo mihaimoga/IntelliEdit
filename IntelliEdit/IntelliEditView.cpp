@@ -232,100 +232,108 @@ void CIntelliEditView::OnInitialUpdate()
 		lpszFileName, _MAX_FNAME,
 		lpszExtension, _MAX_EXT);
 
-	if ((_tcsicmp(lpszExtension, _T(".c")) == 0) ||
-		(_tcsicmp(lpszExtension, _T(".cpp")) == 0) ||
-		(_tcsicmp(lpszExtension, _T(".cxx")) == 0) ||
-		(_tcsicmp(lpszExtension, _T(".h")) == 0) ||
-		(_tcsicmp(lpszExtension, _T(".hpp")) == 0))
+	if (_tcsicmp(lpszExtension, _T(".bat")) == 0)
 	{
-		// Setup the C++ Lexer
-		rCtrl.SetILexer(m_cppLexer);
-		rCtrl.SetKeyWords(0, g_cppKeywords);
+		// Setup the Batch Lexer
+		rCtrl.SetILexer(m_batchLexer);
 	}
 	else
 	{
-		if (_tcsicmp(lpszExtension, _T(".cs")) == 0)
+		if ((_tcsicmp(lpszExtension, _T(".c")) == 0) ||
+			(_tcsicmp(lpszExtension, _T(".cpp")) == 0) ||
+			(_tcsicmp(lpszExtension, _T(".cxx")) == 0) ||
+			(_tcsicmp(lpszExtension, _T(".h")) == 0) ||
+			(_tcsicmp(lpszExtension, _T(".hpp")) == 0))
 		{
 			// Setup the C++ Lexer
 			rCtrl.SetILexer(m_cppLexer);
-			rCtrl.SetKeyWords(0, g_csKeywords);
+			rCtrl.SetKeyWords(0, g_cppKeywords);
 		}
 		else
 		{
-			if (_tcsicmp(lpszExtension, _T(".css")) == 0)
+			if (_tcsicmp(lpszExtension, _T(".cs")) == 0)
 			{
-				// Setup the CSS Lexer
-				rCtrl.SetILexer(m_cssLexer);
+				// Setup the C++ Lexer
+				rCtrl.SetILexer(m_cppLexer);
+				rCtrl.SetKeyWords(0, g_csKeywords);
 			}
 			else
 			{
-				if ((_tcsicmp(lpszExtension, _T(".htm")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".html")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".asp")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".aspx")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".php")) == 0))
+				if (_tcsicmp(lpszExtension, _T(".css")) == 0)
 				{
-					// Setup the HTML Lexer
-					rCtrl.SetILexer(m_htmlLexer);
+					// Setup the CSS Lexer
+					rCtrl.SetILexer(m_cssLexer);
 				}
 				else
 				{
-					if (_tcsicmp(lpszExtension, _T(".md")) == 0)
+					if ((_tcsicmp(lpszExtension, _T(".htm")) == 0) ||
+						(_tcsicmp(lpszExtension, _T(".html")) == 0) ||
+						(_tcsicmp(lpszExtension, _T(".asp")) == 0) ||
+						(_tcsicmp(lpszExtension, _T(".aspx")) == 0) ||
+						(_tcsicmp(lpszExtension, _T(".php")) == 0))
 					{
-						// Setup the CSS Lexer
-						rCtrl.SetILexer(m_mdLexer);
+						// Setup the HTML Lexer
+						rCtrl.SetILexer(m_htmlLexer);
 					}
 					else
 					{
-						if (_tcsicmp(lpszExtension, _T(".m")) == 0)
+						if (_tcsicmp(lpszExtension, _T(".md")) == 0)
 						{
 							// Setup the CSS Lexer
-							rCtrl.SetILexer(m_matlabLexer);
+							rCtrl.SetILexer(m_mdLexer);
 						}
 						else
 						{
-							if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+							if (_tcsicmp(lpszExtension, _T(".m")) == 0)
 							{
-								// Setup the C++ Lexer
-								rCtrl.SetILexer(m_cppLexer);
-								rCtrl.SetKeyWords(0, g_javaKeywords);
+								// Setup the CSS Lexer
+								rCtrl.SetILexer(m_matlabLexer);
 							}
 							else
 							{
-								if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+								if (_tcsicmp(lpszExtension, _T(".java")) == 0)
 								{
-									// Setup the Python Lexer
-									rCtrl.SetILexer(m_pyLexer);
-									rCtrl.SetKeyWords(0, g_pyKeywords);
+									// Setup the C++ Lexer
+									rCtrl.SetILexer(m_cppLexer);
+									rCtrl.SetKeyWords(0, g_javaKeywords);
 								}
 								else
 								{
-									if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+									if (_tcsicmp(lpszExtension, _T(".py")) == 0)
 									{
-										// Setup the SQL Lexer
-										rCtrl.SetILexer(m_sqlLexer);
-										rCtrl.SetKeyWords(0, g_sqlKeywords);
+										// Setup the Python Lexer
+										rCtrl.SetILexer(m_pyLexer);
+										rCtrl.SetKeyWords(0, g_pyKeywords);
 									}
 									else
 									{
-										if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+										if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 										{
-											// Setup the XML Lexer
-											rCtrl.SetILexer(m_xmlLexer);
+											// Setup the SQL Lexer
+											rCtrl.SetILexer(m_sqlLexer);
+											rCtrl.SetKeyWords(0, g_sqlKeywords);
 										}
 										else
 										{
-											if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-												(_tcsicmp(lpszExtension, _T(".log")) == 0))
+											if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 											{
-												rCtrl.SetupDirectAccess();
-												rCtrl.SetILexer(nullptr);
+												// Setup the XML Lexer
+												rCtrl.SetILexer(m_xmlLexer);
 											}
 											else
 											{
-												// Setup the C++ Lexer
-												rCtrl.SetILexer(m_cppLexer);
-												rCtrl.SetKeyWords(0, g_cppKeywords);
+												if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+													(_tcsicmp(lpszExtension, _T(".log")) == 0))
+												{
+													rCtrl.SetupDirectAccess();
+													rCtrl.SetILexer(nullptr);
+												}
+												else
+												{
+													// Setup the C++ Lexer
+													rCtrl.SetILexer(m_cppLexer);
+													rCtrl.SetKeyWords(0, g_cppKeywords);
+												}
 											}
 										}
 									}
@@ -762,6 +770,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Let the base class do its thing
 	if (__super::OnCreate(lpCreateStruct) == -1)
 		return -1;
+
+	// Create the Batch Lexer
+#pragma warning(suppress: 26429)
+	if (m_batchLexer == nullptr)
+	{
+		m_batchLexer = theApp.m_pCreateLexer("batch");
+		if (m_batchLexer == nullptr)
+			return -1;
+	}
 
 	// Create the C++ Lexer
 #pragma warning(suppress: 26429)

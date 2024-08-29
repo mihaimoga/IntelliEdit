@@ -35,6 +35,7 @@ public:
 	CIntelliEditDoc* GetDocument() const;
 protected:
 	//Member variables
+	Scintilla::ILexer5* m_batchLexer;
 	Scintilla::ILexer5* m_cppLexer;
 	Scintilla::ILexer5* m_cssLexer;
 	Scintilla::ILexer5* m_htmlLexer;
