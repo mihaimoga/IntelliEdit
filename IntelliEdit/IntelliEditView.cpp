@@ -235,7 +235,7 @@ void CIntelliEditView::OnInitialUpdate()
 	if (_tcsicmp(lpszExtension, _T(".bat")) == 0)
 	{
 		// Setup the Batch Lexer
-		rCtrl.SetILexer(m_batchLexer);
+		rCtrl.SetILexer(m_batLexer);
 	}
 	else
 	{
@@ -307,32 +307,40 @@ void CIntelliEditView::OnInitialUpdate()
 									}
 									else
 									{
-										if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+										if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
 										{
-											// Setup the SQL Lexer
-											rCtrl.SetILexer(m_sqlLexer);
-											rCtrl.SetKeyWords(0, g_sqlKeywords);
+											// Setup the Shell Lexer
+											rCtrl.SetILexer(m_shLexer);
 										}
 										else
 										{
-											if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+											if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 											{
-												// Setup the XML Lexer
-												rCtrl.SetILexer(m_xmlLexer);
+												// Setup the SQL Lexer
+												rCtrl.SetILexer(m_sqlLexer);
+												rCtrl.SetKeyWords(0, g_sqlKeywords);
 											}
 											else
 											{
-												if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-													(_tcsicmp(lpszExtension, _T(".log")) == 0))
+												if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 												{
-													rCtrl.SetupDirectAccess();
-													rCtrl.SetILexer(nullptr);
+													// Setup the XML Lexer
+													rCtrl.SetILexer(m_xmlLexer);
 												}
 												else
 												{
-													// Setup the C++ Lexer
-													rCtrl.SetILexer(m_cppLexer);
-													rCtrl.SetKeyWords(0, g_cppKeywords);
+													if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+														(_tcsicmp(lpszExtension, _T(".log")) == 0))
+													{
+														rCtrl.SetupDirectAccess();
+														rCtrl.SetILexer(nullptr);
+													}
+													else
+													{
+														// Setup the C++ Lexer
+														rCtrl.SetILexer(m_cppLexer);
+														rCtrl.SetKeyWords(0, g_cppKeywords);
+													}
 												}
 											}
 										}
@@ -773,10 +781,10 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// Create the Batch Lexer
 #pragma warning(suppress: 26429)
-	if (m_batchLexer == nullptr)
+	if (m_batLexer == nullptr)
 	{
-		m_batchLexer = theApp.m_pCreateLexer("batch");
-		if (m_batchLexer == nullptr)
+		m_batLexer = theApp.m_pCreateLexer("batch");
+		if (m_batLexer == nullptr)
 			return -1;
 	}
 
@@ -831,6 +839,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_pyLexer = theApp.m_pCreateLexer("python");
 		if (m_pyLexer == nullptr)
+			return -1;
+	}
+
+	// Create the Shell Lexer
+#pragma warning(suppress: 26429)
+	if (m_shLexer == nullptr)
+	{
+		m_shLexer = theApp.m_pCreateLexer("bash");
+		if (m_shLexer == nullptr)
 			return -1;
 	}
 
