@@ -73,6 +73,12 @@ const TCHAR* g_javaKeywords
 	_T("volatile while")
 };
 
+const TCHAR* g_matlabKeywords
+{
+	_T("break case catch classdef continue else elseif end for function global ")
+	_T("if otherwise parfor persistent return spmd switch try while")
+};
+
 const TCHAR* g_pyKeywords
 {
 	/* https://www.w3schools.com/python/python_ref_keywords.asp */
@@ -271,48 +277,56 @@ void CIntelliEditView::OnInitialUpdate()
 					}
 					else
 					{
-						if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+						if (_tcsicmp(lpszExtension, _T(".m")) == 0)
 						{
-							// Setup the C++ Lexer
-							rCtrl.SetILexer(m_cppLexer);
-							rCtrl.SetKeyWords(0, g_javaKeywords);
+							// Setup the CSS Lexer
+							rCtrl.SetILexer(m_matlabLexer);
 						}
 						else
 						{
-							if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+							if (_tcsicmp(lpszExtension, _T(".java")) == 0)
 							{
-								// Setup the Python Lexer
-								rCtrl.SetILexer(m_pyLexer);
-								rCtrl.SetKeyWords(0, g_pyKeywords);
+								// Setup the C++ Lexer
+								rCtrl.SetILexer(m_cppLexer);
+								rCtrl.SetKeyWords(0, g_javaKeywords);
 							}
 							else
 							{
-								if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+								if (_tcsicmp(lpszExtension, _T(".py")) == 0)
 								{
-									// Setup the SQL Lexer
-									rCtrl.SetILexer(m_sqlLexer);
-									rCtrl.SetKeyWords(0, g_sqlKeywords);
+									// Setup the Python Lexer
+									rCtrl.SetILexer(m_pyLexer);
+									rCtrl.SetKeyWords(0, g_pyKeywords);
 								}
 								else
 								{
-									if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+									if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 									{
-										// Setup the XML Lexer
-										rCtrl.SetILexer(m_xmlLexer);
+										// Setup the SQL Lexer
+										rCtrl.SetILexer(m_sqlLexer);
+										rCtrl.SetKeyWords(0, g_sqlKeywords);
 									}
 									else
 									{
-										if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-											(_tcsicmp(lpszExtension, _T(".log")) == 0))
+										if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 										{
-											rCtrl.SetupDirectAccess();
-											rCtrl.SetILexer(nullptr);
+											// Setup the XML Lexer
+											rCtrl.SetILexer(m_xmlLexer);
 										}
 										else
 										{
-											// Setup the C++ Lexer
-											rCtrl.SetILexer(m_cppLexer);
-											rCtrl.SetKeyWords(0, g_cppKeywords);
+											if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+												(_tcsicmp(lpszExtension, _T(".log")) == 0))
+											{
+												rCtrl.SetupDirectAccess();
+												rCtrl.SetILexer(nullptr);
+											}
+											else
+											{
+												// Setup the C++ Lexer
+												rCtrl.SetILexer(m_cppLexer);
+												rCtrl.SetKeyWords(0, g_cppKeywords);
+											}
 										}
 									}
 								}
@@ -773,6 +787,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_htmlLexer = theApp.m_pCreateLexer("hypertext");
 		if (m_htmlLexer == nullptr)
+			return -1;
+	}
+
+	// Create the MATLAB Lexer
+#pragma warning(suppress: 26429)
+	if (m_matlabLexer == nullptr)
+	{
+		m_matlabLexer = theApp.m_pCreateLexer("matlab");
+		if (m_matlabLexer == nullptr)
 			return -1;
 	}
 
