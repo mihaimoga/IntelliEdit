@@ -154,11 +154,15 @@ END_MESSAGE_MAP()
 
 // CIntelliEditView construction/destruction
 
-CIntelliEditView::CIntelliEditView() noexcept : m_cppLexer{ nullptr },
+CIntelliEditView::CIntelliEditView() noexcept : 
+	m_batLexer{ nullptr },
+	m_cppLexer{ nullptr },
 	m_cssLexer{ nullptr },
 	m_htmlLexer{ nullptr },
+	m_matlabLexer{ nullptr },
 	m_mdLexer{ nullptr },
 	m_pyLexer{ nullptr },
+	m_shLexer{ nullptr },
 	m_sqlLexer{ nullptr },
 	m_xmlLexer{ nullptr }
 {
