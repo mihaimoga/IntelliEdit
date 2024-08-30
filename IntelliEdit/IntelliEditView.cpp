@@ -98,6 +98,16 @@ const TCHAR* g_pyKeywords
 	_T("return True try while with yield")
 };
 
+const TCHAR* g_rsKeywords
+{
+	/* https://doc.rust-lang.org/reference/keywords.html */
+	_T("as break const continue crate else enum extern false fn for if impl in ")
+	_T("let loop match mod move mut pub ref return self static struct super trait ")
+	_T("true type unsafe use where while async await dyn abstract become box do ")
+	_T("final macro override priv typeof unsized virtual yield try macro_rules ")
+	_T("union dyn")
+};
+
 const TCHAR* g_sqlKeywords
 {
 	/* https://www.w3schools.com/sql/sql_ref_keywords.asp */
@@ -174,6 +184,7 @@ CIntelliEditView::CIntelliEditView() noexcept :
 	m_matlabLexer{ nullptr },
 	m_mdLexer{ nullptr },
 	m_pyLexer{ nullptr },
+	m_rsLexer{ nullptr },
 	m_shLexer{ nullptr },
 	m_sqlLexer{ nullptr },
 	m_xmlLexer{ nullptr }
@@ -338,39 +349,48 @@ void CIntelliEditView::OnInitialUpdate()
 											}
 											else
 											{
-												if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
+												if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
 												{
-													// Setup the Shell Lexer
-													rCtrl.SetILexer(m_shLexer);
+													// Setup the Rust Lexer
+													rCtrl.SetILexer(m_rsLexer);
+													rCtrl.SetKeyWords(0, g_rsKeywords);
 												}
 												else
 												{
-													if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+													if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
 													{
-														// Setup the SQL Lexer
-														rCtrl.SetILexer(m_sqlLexer);
-														rCtrl.SetKeyWords(0, g_sqlKeywords);
+														// Setup the Shell Lexer
+														rCtrl.SetILexer(m_shLexer);
 													}
 													else
 													{
-														if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+														if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 														{
-															// Setup the XML Lexer
-															rCtrl.SetILexer(m_xmlLexer);
+															// Setup the SQL Lexer
+															rCtrl.SetILexer(m_sqlLexer);
+															rCtrl.SetKeyWords(0, g_sqlKeywords);
 														}
 														else
 														{
-															if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-																(_tcsicmp(lpszExtension, _T(".log")) == 0))
+															if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 															{
-																rCtrl.SetupDirectAccess();
-																rCtrl.SetILexer(nullptr);
+																// Setup the XML Lexer
+																rCtrl.SetILexer(m_xmlLexer);
 															}
 															else
 															{
-																// Setup the C++ Lexer
-																rCtrl.SetILexer(m_cppLexer);
-																rCtrl.SetKeyWords(0, g_cppKeywords);
+																if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+																	(_tcsicmp(lpszExtension, _T(".log")) == 0))
+																{
+																	rCtrl.SetupDirectAccess();
+																	rCtrl.SetILexer(nullptr);
+																}
+																else
+																{
+																	// Setup the C++ Lexer
+																	rCtrl.SetILexer(m_cppLexer);
+																	rCtrl.SetKeyWords(0, g_cppKeywords);
+																}
 															}
 														}
 													}
@@ -881,6 +901,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_pyLexer = theApp.m_pCreateLexer("python");
 		if (m_pyLexer == nullptr)
+			return -1;
+	}
+
+	// Create the Rust Lexer
+#pragma warning(suppress: 26429)
+	if (m_rsLexer == nullptr)
+	{
+		m_rsLexer = theApp.m_pCreateLexer("rust");
+		if (m_rsLexer == nullptr)
 			return -1;
 	}
 
