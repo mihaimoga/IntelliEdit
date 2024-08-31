@@ -31,6 +31,34 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
+const TCHAR* g_cmakeKeywords
+{
+	/* https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html */
+	_T("block break cmake_host_system_information cmake_language cmake_minimum_required ")
+	_T("cmake_parse_arguments cmake_path cmake_policy configure_file continue ")
+	_T("else elseif endblock endforeach endfunction endif endmacro endwhile ")
+	_T("execute_process file find_file find_library find_package find_path ")
+	_T("find_program foreach function get_cmake_property get_directory_property ")
+	_T("get_filename_component get_property if include include_guard list macro ")
+	_T("mark_as_advanced math message option return separate_arguments set ")
+	_T("set_directory_properties set_property site_name string unset variable_watch while ")
+	// Project
+	_T("add_compile_definitions add_compile_options add_custom_command add_custom_target ")
+	_T("add_definitions add_dependencies add_executable add_library add_link_options ")
+	_T("add_subdirectory add_test aux_source_directory build_command cmake_file_api ")
+	_T("create_test_sourcelist define_property enable_language enable_testing export ")
+	_T("fltk_wrap_ui get_source_file_property get_target_property get_test_property ")
+	_T("include_directories include_external_msproject include_regular_expression ")
+	_T("install link_directories link_libraries load_cache project remove_definitions ")
+	_T("set_source_files_properties set_target_properties set_tests_properties ")
+	_T("source_group target_compile_definitions target_compile_features ")
+	_T("target_compile_options target_include_directories target_link_directories ")
+	_T("target_link_libraries target_link_options target_precompile_headers ")
+	_T("target_sources try_compile try_run ctest_build ctest_configure ctest_coverage ")
+	_T("ctest_empty_binary_directory ctest_memcheck ctest_read_custom_files ")
+	_T("ctest_run_script ctest_sleep ctest_start ctest_submit ctest_test ctest_update ctest_upload")
+};
+
 const TCHAR* g_cppKeywords
 {
 	/* _T("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break ")
@@ -193,20 +221,21 @@ END_MESSAGE_MAP()
 // CIntelliEditView construction/destruction
 
 CIntelliEditView::CIntelliEditView() noexcept : 
-	m_batLexer{ nullptr },
-	m_cppLexer{ nullptr },
-	m_cssLexer{ nullptr },
-	m_htmlLexer{ nullptr },
-	m_jsonLexer{ nullptr },
-	m_makLexer{ nullptr },
-	m_matLexer{ nullptr },
-	m_mdLexer{ nullptr },
-	m_pyLexer{ nullptr },
-	m_rLexer{ nullptr },
-	m_rsLexer{ nullptr },
-	m_shLexer{ nullptr },
+	m_batLexer { nullptr },
+	m_cmakeLexer { nullptr },
+	m_cppLexer { nullptr },
+	m_cssLexer { nullptr },
+	m_htmlLexer { nullptr },
+	m_jsonLexer { nullptr },
+	m_makLexer { nullptr },
+	m_matLexer { nullptr },
+	m_mdLexer { nullptr },
+	m_pyLexer { nullptr },
+	m_rLexer { nullptr },
+	m_rsLexer { nullptr },
+	m_shLexer { nullptr },
 	m_sqlLexer{ nullptr },
-	m_xmlLexer{ nullptr }
+	m_xmlLexer { nullptr }
 {
 	LoadMarginSettings();
 }
@@ -285,155 +314,166 @@ void CIntelliEditView::OnInitialUpdate()
 	}
 	else
 	{
-		if ((_tcsicmp(lpszExtension, _T(".c")) == 0) ||
-			(_tcsicmp(lpszExtension, _T(".cpp")) == 0) ||
-			(_tcsicmp(lpszExtension, _T(".cxx")) == 0) ||
-			(_tcsicmp(lpszExtension, _T(".h")) == 0) ||
-			(_tcsicmp(lpszExtension, _T(".hpp")) == 0))
+		if ((_tcsicmp(lpszExtension, _T(".cmake")) == 0) ||
+			((_tcsicmp(lpszFileName, _T("cmakelists")) == 0) && (_tcsicmp(lpszExtension, _T(".txt")) == 0)))
 		{
-			// Setup the C++ Lexer
-			rCtrl.SetILexer(m_cppLexer);
-			rCtrl.SetKeyWords(0, g_cppKeywords);
+			// Setup the CMake Lexer
+			rCtrl.SetILexer(m_cmakeLexer);
+			rCtrl.SetKeyWords(0, g_cmakeKeywords);
 		}
 		else
 		{
-			if (_tcsicmp(lpszExtension, _T(".cs")) == 0)
+			if ((_tcsicmp(lpszExtension, _T(".c")) == 0) ||
+				(_tcsicmp(lpszExtension, _T(".cpp")) == 0) ||
+				(_tcsicmp(lpszExtension, _T(".cxx")) == 0) ||
+				(_tcsicmp(lpszExtension, _T(".h")) == 0) ||
+				(_tcsicmp(lpszExtension, _T(".hpp")) == 0))
 			{
 				// Setup the C++ Lexer
 				rCtrl.SetILexer(m_cppLexer);
-				rCtrl.SetKeyWords(0, g_csKeywords);
+				rCtrl.SetKeyWords(0, g_cppKeywords);
 			}
 			else
 			{
-				if (_tcsicmp(lpszExtension, _T(".css")) == 0)
+				if (_tcsicmp(lpszExtension, _T(".cs")) == 0)
 				{
-					// Setup the CSS Lexer
-					rCtrl.SetILexer(m_cssLexer);
+					// Setup the C++ Lexer
+					rCtrl.SetILexer(m_cppLexer);
+					rCtrl.SetKeyWords(0, g_csKeywords);
 				}
 				else
 				{
-					if ((_tcsicmp(lpszExtension, _T(".htm")) == 0) ||
-						(_tcsicmp(lpszExtension, _T(".html")) == 0) ||
-						(_tcsicmp(lpszExtension, _T(".asp")) == 0) ||
-						(_tcsicmp(lpszExtension, _T(".aspx")) == 0) ||
-						(_tcsicmp(lpszExtension, _T(".php")) == 0))
+					if (_tcsicmp(lpszExtension, _T(".css")) == 0)
 					{
-						// Setup the HTML Lexer
-						rCtrl.SetILexer(m_htmlLexer);
+						// Setup the CSS Lexer
+						rCtrl.SetILexer(m_cssLexer);
 					}
 					else
 					{
-						if (_tcsicmp(lpszExtension, _T(".groovy")) == 0)
+						if ((_tcsicmp(lpszExtension, _T(".htm")) == 0) ||
+							(_tcsicmp(lpszExtension, _T(".html")) == 0) ||
+							(_tcsicmp(lpszExtension, _T(".asp")) == 0) ||
+							(_tcsicmp(lpszExtension, _T(".aspx")) == 0) ||
+							(_tcsicmp(lpszExtension, _T(".php")) == 0))
 						{
-							// Setup the C++ Lexer
-							rCtrl.SetILexer(m_cppLexer);
-							rCtrl.SetKeyWords(0, g_groovyKeywords);
+							// Setup the HTML Lexer
+							rCtrl.SetILexer(m_htmlLexer);
 						}
 						else
 						{
-							if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+							if (_tcsicmp(lpszExtension, _T(".groovy")) == 0)
 							{
 								// Setup the C++ Lexer
 								rCtrl.SetILexer(m_cppLexer);
-								rCtrl.SetKeyWords(0, g_javaKeywords);
+								rCtrl.SetKeyWords(0, g_groovyKeywords);
 							}
 							else
 							{
-								if (_tcsicmp(lpszExtension, _T(".js")) == 0)
+								if (_tcsicmp(lpszExtension, _T(".java")) == 0)
 								{
 									// Setup the C++ Lexer
 									rCtrl.SetILexer(m_cppLexer);
-									rCtrl.SetKeyWords(0, g_jsKeywords);
+									rCtrl.SetKeyWords(0, g_javaKeywords);
 								}
 								else
 								{
-									if (_tcsicmp(lpszExtension, _T(".json")) == 0)
+									if (_tcsicmp(lpszExtension, _T(".js")) == 0)
 									{
-										// Setup the JSON Lexer
-										rCtrl.SetILexer(m_jsonLexer);
+										// Setup the C++ Lexer
+										rCtrl.SetILexer(m_cppLexer);
+										rCtrl.SetKeyWords(0, g_jsKeywords);
 									}
 									else
 									{
-										if (_tcsicmp(lpszExtension, _T(".m")) == 0)
+										if (_tcsicmp(lpszExtension, _T(".json")) == 0)
 										{
-											// Setup the MATLAB Lexer
-											rCtrl.SetILexer(m_matLexer);
+											// Setup the JSON Lexer
+											rCtrl.SetILexer(m_jsonLexer);
 										}
 										else
 										{
-											if (_tcsicmp(lpszExtension, _T(".mak")) == 0)
+											if (_tcsicmp(lpszExtension, _T(".m")) == 0)
 											{
-												// Setup the Makefile Lexer
-												rCtrl.SetILexer(m_makLexer);
+												// Setup the MATLAB Lexer
+												rCtrl.SetILexer(m_matLexer);
 											}
 											else
 											{
-												if (_tcsicmp(lpszExtension, _T(".md")) == 0)
+												if ((_tcsicmp(lpszExtension, _T(".mak")) == 0) ||
+													(_tcsicmp(lpszFileName, _T("makefile")) == 0))
 												{
-													// Setup the CSS Lexer
-													rCtrl.SetILexer(m_mdLexer);
+													// Setup the Makefile Lexer
+													rCtrl.SetILexer(m_makLexer);
 												}
 												else
 												{
-													if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+													if (_tcsicmp(lpszExtension, _T(".md")) == 0)
 													{
-														// Setup the Python Lexer
-														rCtrl.SetILexer(m_pyLexer);
-														rCtrl.SetKeyWords(0, g_pyKeywords);
+														// Setup the CSS Lexer
+														rCtrl.SetILexer(m_mdLexer);
 													}
 													else
 													{
-														if (_tcsicmp(lpszExtension, _T(".r")) == 0)
+														if (_tcsicmp(lpszExtension, _T(".py")) == 0)
 														{
-															// Setup the R Lexer
-															rCtrl.SetILexer(m_rLexer);
-															rCtrl.SetKeyWords(0, g_rKeywords);
+															// Setup the Python Lexer
+															rCtrl.SetILexer(m_pyLexer);
+															rCtrl.SetKeyWords(0, g_pyKeywords);
 														}
 														else
 														{
-															if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
+															if (_tcsicmp(lpszExtension, _T(".r")) == 0)
 															{
-																// Setup the Rust Lexer
-																rCtrl.SetILexer(m_rsLexer);
-																rCtrl.SetKeyWords(0, g_rsKeywords);
+																// Setup the R Lexer
+																rCtrl.SetILexer(m_rLexer);
+																rCtrl.SetKeyWords(0, g_rKeywords);
 															}
 															else
 															{
-																if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
+																if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
 																{
-																	// Setup the Shell Lexer
-																	rCtrl.SetILexer(m_shLexer);
+																	// Setup the Rust Lexer
+																	rCtrl.SetILexer(m_rsLexer);
+																	rCtrl.SetKeyWords(0, g_rsKeywords);
 																}
 																else
 																{
-																	if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+																	if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
 																	{
-																		// Setup the SQL Lexer
-																		rCtrl.SetILexer(m_sqlLexer);
-																		rCtrl.SetKeyWords(0, g_sqlKeywords);
+																		// Setup the Shell Lexer
+																		rCtrl.SetILexer(m_shLexer);
 																	}
 																	else
 																	{
-																		if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+																		if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 																		{
-																			// Setup the XML Lexer
-																			rCtrl.SetILexer(m_xmlLexer);
+																			// Setup the SQL Lexer
+																			rCtrl.SetILexer(m_sqlLexer);
+																			rCtrl.SetKeyWords(0, g_sqlKeywords);
 																		}
 																		else
 																		{
-																			if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-																				(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
-																				(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
-																				(_tcsicmp(lpszExtension, _T("")) == 0))
+																			if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 																			{
-																				rCtrl.SetupDirectAccess();
-																				rCtrl.SetILexer(nullptr);
+																				// Setup the XML Lexer
+																				rCtrl.SetILexer(m_xmlLexer);
 																			}
 																			else
 																			{
-																				// Setup the C++ Lexer
-																				rCtrl.SetILexer(m_cppLexer);
-																				rCtrl.SetKeyWords(0, g_cppKeywords);
+																				if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+																					(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
+																					(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
+																					(_tcsicmp(lpszExtension, _T("")) == 0))
+																				{
+																					rCtrl.SetupDirectAccess();
+																					rCtrl.SetILexer(nullptr);
+																				}
+																				else
+																				{
+																					// Setup the C++ Lexer
+																					rCtrl.SetILexer(m_cppLexer);
+																					rCtrl.SetKeyWords(0, g_cppKeywords);
+																				}
 																			}
 																		}
 																	}
@@ -885,6 +925,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_batLexer = theApp.m_pCreateLexer("batch");
 		if (m_batLexer == nullptr)
+			return -1;
+	}
+
+	// Create the CMake Lexer
+#pragma warning(suppress: 26429)
+	if (m_cmakeLexer == nullptr)
+	{
+		m_cmakeLexer = theApp.m_pCreateLexer("cmake");
+		if (m_cmakeLexer == nullptr)
 			return -1;
 	}
 
