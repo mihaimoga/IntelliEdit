@@ -62,6 +62,17 @@ const TCHAR* g_csKeywords
 	_T("volatile while")
 };
 
+const TCHAR* g_groovyKeywords
+{
+	/* https://docs.oracle.com/cloud/latest/big-data-discovery-cloud/BDDDE/rsu_transform_unsupported_features.htm */
+	_T("abstract as assert boolean break byte case catch char class const ")
+	_T("continue def default do double else enum extends false final finally ")
+	_T("float for goto if implements import in instanceof int interface long ")
+	_T("native new null package private protected public return short static ")
+	_T("strictfp super switch synchronized this threadsafe throw throws ")
+	_T("transient true try void volatile while")
+};
+
 const TCHAR* g_javaKeywords
 {
 	/* https://www.w3schools.com/java/java_ref_keywords.asp */
@@ -312,109 +323,118 @@ void CIntelliEditView::OnInitialUpdate()
 					}
 					else
 					{
-						if (_tcsicmp(lpszExtension, _T(".m")) == 0)
+						if (_tcsicmp(lpszExtension, _T(".groovy")) == 0)
 						{
-							// Setup the MATLAB Lexer
-							rCtrl.SetILexer(m_matLexer);
+							// Setup the C++ Lexer
+							rCtrl.SetILexer(m_cppLexer);
+							rCtrl.SetKeyWords(0, g_groovyKeywords);
 						}
 						else
 						{
-							if (_tcsicmp(lpszExtension, _T(".mak")) == 0)
+							if (_tcsicmp(lpszExtension, _T(".java")) == 0)
 							{
-								// Setup the Makefile Lexer
-								rCtrl.SetILexer(m_makLexer);
+								// Setup the C++ Lexer
+								rCtrl.SetILexer(m_cppLexer);
+								rCtrl.SetKeyWords(0, g_javaKeywords);
 							}
 							else
 							{
-								if (_tcsicmp(lpszExtension, _T(".md")) == 0)
+								if (_tcsicmp(lpszExtension, _T(".js")) == 0)
 								{
-									// Setup the CSS Lexer
-									rCtrl.SetILexer(m_mdLexer);
+									// Setup the C++ Lexer
+									rCtrl.SetILexer(m_cppLexer);
+									rCtrl.SetKeyWords(0, g_jsKeywords);
 								}
 								else
 								{
-									if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+									if (_tcsicmp(lpszExtension, _T(".json")) == 0)
 									{
-										// Setup the C++ Lexer
-										rCtrl.SetILexer(m_cppLexer);
-										rCtrl.SetKeyWords(0, g_javaKeywords);
+										// Setup the JSON Lexer
+										rCtrl.SetILexer(m_jsonLexer);
 									}
 									else
 									{
-										if (_tcsicmp(lpszExtension, _T(".js")) == 0)
+										if (_tcsicmp(lpszExtension, _T(".m")) == 0)
 										{
-											// Setup the C++ Lexer
-											rCtrl.SetILexer(m_cppLexer);
-											rCtrl.SetKeyWords(0, g_jsKeywords);
+											// Setup the MATLAB Lexer
+											rCtrl.SetILexer(m_matLexer);
 										}
 										else
 										{
-											if (_tcsicmp(lpszExtension, _T(".json")) == 0)
+											if (_tcsicmp(lpszExtension, _T(".mak")) == 0)
 											{
-												// Setup the JSON Lexer
-												rCtrl.SetILexer(m_jsonLexer);
+												// Setup the Makefile Lexer
+												rCtrl.SetILexer(m_makLexer);
 											}
 											else
 											{
-												if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+												if (_tcsicmp(lpszExtension, _T(".md")) == 0)
 												{
-													// Setup the Python Lexer
-													rCtrl.SetILexer(m_pyLexer);
-													rCtrl.SetKeyWords(0, g_pyKeywords);
+													// Setup the CSS Lexer
+													rCtrl.SetILexer(m_mdLexer);
 												}
 												else
 												{
-													if (_tcsicmp(lpszExtension, _T(".r")) == 0)
+													if (_tcsicmp(lpszExtension, _T(".py")) == 0)
 													{
-														// Setup the R Lexer
-														rCtrl.SetILexer(m_rLexer);
-														rCtrl.SetKeyWords(0, g_rKeywords);
+														// Setup the Python Lexer
+														rCtrl.SetILexer(m_pyLexer);
+														rCtrl.SetKeyWords(0, g_pyKeywords);
 													}
 													else
 													{
-														if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
+														if (_tcsicmp(lpszExtension, _T(".r")) == 0)
 														{
-															// Setup the Rust Lexer
-															rCtrl.SetILexer(m_rsLexer);
-															rCtrl.SetKeyWords(0, g_rsKeywords);
+															// Setup the R Lexer
+															rCtrl.SetILexer(m_rLexer);
+															rCtrl.SetKeyWords(0, g_rKeywords);
 														}
 														else
 														{
-															if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
+															if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
 															{
-																// Setup the Shell Lexer
-																rCtrl.SetILexer(m_shLexer);
+																// Setup the Rust Lexer
+																rCtrl.SetILexer(m_rsLexer);
+																rCtrl.SetKeyWords(0, g_rsKeywords);
 															}
 															else
 															{
-																if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+																if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
 																{
-																	// Setup the SQL Lexer
-																	rCtrl.SetILexer(m_sqlLexer);
-																	rCtrl.SetKeyWords(0, g_sqlKeywords);
+																	// Setup the Shell Lexer
+																	rCtrl.SetILexer(m_shLexer);
 																}
 																else
 																{
-																	if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+																	if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 																	{
-																		// Setup the XML Lexer
-																		rCtrl.SetILexer(m_xmlLexer);
+																		// Setup the SQL Lexer
+																		rCtrl.SetILexer(m_sqlLexer);
+																		rCtrl.SetKeyWords(0, g_sqlKeywords);
 																	}
 																	else
 																	{
-																		if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-																			(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
-																			(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
-																			(_tcsicmp(lpszExtension, _T("")) == 0))
+																		if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 																		{
-																			rCtrl.SetupDirectAccess();
-																			rCtrl.SetILexer(nullptr);
+																			// Setup the XML Lexer
+																			rCtrl.SetILexer(m_xmlLexer);
 																		}
 																		else
 																		{
-																			// Setup the C++ Lexer
-																			rCtrl.SetILexer(m_cppLexer);
-																			rCtrl.SetKeyWords(0, g_cppKeywords);
+																			if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+																				(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
+																				(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
+																				(_tcsicmp(lpszExtension, _T("")) == 0))
+																			{
+																				rCtrl.SetupDirectAccess();
+																				rCtrl.SetILexer(nullptr);
+																			}
+																			else
+																			{
+																				// Setup the C++ Lexer
+																				rCtrl.SetILexer(m_cppLexer);
+																				rCtrl.SetKeyWords(0, g_cppKeywords);
+																			}
 																		}
 																	}
 																}
