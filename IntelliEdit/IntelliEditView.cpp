@@ -98,6 +98,12 @@ const TCHAR* g_pyKeywords
 	_T("return True try while with yield")
 };
 
+const TCHAR* g_rKeywords
+{
+	_T("if else repeat while function for next break TRUE FALSE NULL Inf NaN NA ")
+	_T("NA_integer_ NA_real_ NA_complex_ NA_character_")
+};
+
 const TCHAR* g_rsKeywords
 {
 	/* https://doc.rust-lang.org/reference/keywords.html */
@@ -181,9 +187,11 @@ CIntelliEditView::CIntelliEditView() noexcept :
 	m_cssLexer{ nullptr },
 	m_htmlLexer{ nullptr },
 	m_jsonLexer{ nullptr },
-	m_matlabLexer{ nullptr },
+	m_makLexer{ nullptr },
+	m_matLexer{ nullptr },
 	m_mdLexer{ nullptr },
 	m_pyLexer{ nullptr },
+	m_rLexer{ nullptr },
 	m_rsLexer{ nullptr },
 	m_shLexer{ nullptr },
 	m_sqlLexer{ nullptr },
@@ -306,90 +314,109 @@ void CIntelliEditView::OnInitialUpdate()
 					{
 						if (_tcsicmp(lpszExtension, _T(".m")) == 0)
 						{
-							// Setup the CSS Lexer
-							rCtrl.SetILexer(m_matlabLexer);
+							// Setup the MATLAB Lexer
+							rCtrl.SetILexer(m_matLexer);
 						}
 						else
 						{
-							if (_tcsicmp(lpszExtension, _T(".md")) == 0)
+							if (_tcsicmp(lpszExtension, _T(".mak")) == 0)
 							{
-								// Setup the CSS Lexer
-								rCtrl.SetILexer(m_mdLexer);
+								// Setup the Makefile Lexer
+								rCtrl.SetILexer(m_makLexer);
 							}
 							else
 							{
-								if (_tcsicmp(lpszExtension, _T(".java")) == 0)
+								if (_tcsicmp(lpszExtension, _T(".md")) == 0)
 								{
-									// Setup the C++ Lexer
-									rCtrl.SetILexer(m_cppLexer);
-									rCtrl.SetKeyWords(0, g_javaKeywords);
+									// Setup the CSS Lexer
+									rCtrl.SetILexer(m_mdLexer);
 								}
 								else
 								{
-									if (_tcsicmp(lpszExtension, _T(".js")) == 0)
+									if (_tcsicmp(lpszExtension, _T(".java")) == 0)
 									{
 										// Setup the C++ Lexer
 										rCtrl.SetILexer(m_cppLexer);
-										rCtrl.SetKeyWords(0, g_jsKeywords);
+										rCtrl.SetKeyWords(0, g_javaKeywords);
 									}
 									else
 									{
-										if (_tcsicmp(lpszExtension, _T(".json")) == 0)
+										if (_tcsicmp(lpszExtension, _T(".js")) == 0)
 										{
-											// Setup the JSON Lexer
-											rCtrl.SetILexer(m_jsonLexer);
+											// Setup the C++ Lexer
+											rCtrl.SetILexer(m_cppLexer);
+											rCtrl.SetKeyWords(0, g_jsKeywords);
 										}
 										else
 										{
-											if (_tcsicmp(lpszExtension, _T(".py")) == 0)
+											if (_tcsicmp(lpszExtension, _T(".json")) == 0)
 											{
-												// Setup the Python Lexer
-												rCtrl.SetILexer(m_pyLexer);
-												rCtrl.SetKeyWords(0, g_pyKeywords);
+												// Setup the JSON Lexer
+												rCtrl.SetILexer(m_jsonLexer);
 											}
 											else
 											{
-												if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
+												if (_tcsicmp(lpszExtension, _T(".py")) == 0)
 												{
-													// Setup the Rust Lexer
-													rCtrl.SetILexer(m_rsLexer);
-													rCtrl.SetKeyWords(0, g_rsKeywords);
+													// Setup the Python Lexer
+													rCtrl.SetILexer(m_pyLexer);
+													rCtrl.SetKeyWords(0, g_pyKeywords);
 												}
 												else
 												{
-													if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
+													if (_tcsicmp(lpszExtension, _T(".r")) == 0)
 													{
-														// Setup the Shell Lexer
-														rCtrl.SetILexer(m_shLexer);
+														// Setup the R Lexer
+														rCtrl.SetILexer(m_rLexer);
+														rCtrl.SetKeyWords(0, g_rKeywords);
 													}
 													else
 													{
-														if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
+														if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
 														{
-															// Setup the SQL Lexer
-															rCtrl.SetILexer(m_sqlLexer);
-															rCtrl.SetKeyWords(0, g_sqlKeywords);
+															// Setup the Rust Lexer
+															rCtrl.SetILexer(m_rsLexer);
+															rCtrl.SetKeyWords(0, g_rsKeywords);
 														}
 														else
 														{
-															if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+															if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
 															{
-																// Setup the XML Lexer
-																rCtrl.SetILexer(m_xmlLexer);
+																// Setup the Shell Lexer
+																rCtrl.SetILexer(m_shLexer);
 															}
 															else
 															{
-																if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-																	(_tcsicmp(lpszExtension, _T(".log")) == 0))
+																if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
 																{
-																	rCtrl.SetupDirectAccess();
-																	rCtrl.SetILexer(nullptr);
+																	// Setup the SQL Lexer
+																	rCtrl.SetILexer(m_sqlLexer);
+																	rCtrl.SetKeyWords(0, g_sqlKeywords);
 																}
 																else
 																{
-																	// Setup the C++ Lexer
-																	rCtrl.SetILexer(m_cppLexer);
-																	rCtrl.SetKeyWords(0, g_cppKeywords);
+																	if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+																	{
+																		// Setup the XML Lexer
+																		rCtrl.SetILexer(m_xmlLexer);
+																	}
+																	else
+																	{
+																		if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+																			(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
+																			(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
+																			(_tcsicmp(lpszExtension, _T("")) == 0))
+																		{
+																			rCtrl.SetupDirectAccess();
+																			rCtrl.SetILexer(nullptr);
+																		}
+																		else
+																		{
+																			// Setup the C++ Lexer
+																			rCtrl.SetILexer(m_cppLexer);
+																			rCtrl.SetKeyWords(0, g_cppKeywords);
+																		}
+																	}
 																}
 															}
 														}
@@ -877,12 +904,21 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			return -1;
 	}
 
+	// Create the Makefile Lexer
+#pragma warning(suppress: 26429)
+	if (m_makLexer == nullptr)
+	{
+		m_makLexer = theApp.m_pCreateLexer("makefile");
+		if (m_makLexer == nullptr)
+			return -1;
+	}
+
 	// Create the MATLAB Lexer
 #pragma warning(suppress: 26429)
-	if (m_matlabLexer == nullptr)
+	if (m_matLexer == nullptr)
 	{
-		m_matlabLexer = theApp.m_pCreateLexer("matlab");
-		if (m_matlabLexer == nullptr)
+		m_matLexer = theApp.m_pCreateLexer("matlab");
+		if (m_matLexer == nullptr)
 			return -1;
 	}
 
@@ -901,6 +937,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_pyLexer = theApp.m_pCreateLexer("python");
 		if (m_pyLexer == nullptr)
+			return -1;
+	}
+
+	// Create the R Lexer
+#pragma warning(suppress: 26429)
+	if (m_rLexer == nullptr)
+	{
+		m_rLexer = theApp.m_pCreateLexer("r");
+		if (m_rLexer == nullptr)
 			return -1;
 	}
 

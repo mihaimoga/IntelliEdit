@@ -40,9 +40,11 @@ protected:
 	Scintilla::ILexer5* m_cssLexer;
 	Scintilla::ILexer5* m_htmlLexer;
 	Scintilla::ILexer5* m_jsonLexer;
-	Scintilla::ILexer5* m_matlabLexer;
+	Scintilla::ILexer5* m_makLexer;
+	Scintilla::ILexer5* m_matLexer;
 	Scintilla::ILexer5* m_mdLexer;
 	Scintilla::ILexer5* m_pyLexer;
+	Scintilla::ILexer5* m_rLexer;
 	Scintilla::ILexer5* m_rsLexer;
 	Scintilla::ILexer5* m_shLexer;
 	Scintilla::ILexer5* m_sqlLexer;
