@@ -59,7 +59,7 @@ BOOL CWebBrowserDlg::OnInitDialog()
         [this]() {
             m_pCustomControl.SetParentView((CView*)this);
             m_pCustomControl.DisablePopups();
-            m_pCustomControl.Navigate(L"https://www.moga.doctor/freeware/IntelliEdit.html", nullptr);
+            m_pCustomControl.Navigate(USER_MANUAL_URL, nullptr);
 
             m_pCustomControl.RegisterCallback(CWebBrowser::CallbackType::TitleChanged, [this]() {
                 CString strTitle = m_pCustomControl.GetTitle();

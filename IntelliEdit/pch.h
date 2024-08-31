@@ -45,6 +45,14 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include <iomanip>
 #include <atlsync.h>
 #include <vector>
+#include <map>
+#include <codecvt>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cctype>
+
+#include <afxsock.h>            // MFC socket extensions
 
 //Pull in support for Scintilla \ Lexilla
 #pragma warning(push)
@@ -61,3 +69,7 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include <Scintilla.h>
 
 #endif //PCH_H
+
+#define APPLICATION_URL _T("https://www.moga.doctor/freeware/IntelliEdit.xml")
+#define USER_MANUAL_URL _T("https://www.moga.doctor/freeware/IntelliEdit.html")
+#define IntelliEditSection _T("IntelliEdit")

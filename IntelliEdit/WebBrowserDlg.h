@@ -31,11 +31,13 @@ public:
 	enum { IDD = IDD_WebBrowserDlg };
 #endif
 
-public:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
 	CWebBrowser m_pCustomControl;
 
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+
 protected:
+	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
 

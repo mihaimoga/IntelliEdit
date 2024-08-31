@@ -22,6 +22,7 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "ScintillaDocView.h"
 #include "MainFrame.h"
 #include "WebBrowserDlg.h"
+#include "CheckForUpdatesDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,6 +43,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(IDC_DISCUSSIONS, &CMainFrame::OnDiscussions)
 	ON_COMMAND(IDC_WIKI, &CMainFrame::OnWiki)
     ON_COMMAND(IDC_USER_MANUAL, &CMainFrame::OnUserManual)
+    ON_COMMAND(IDC_CHECK_FOR_UPDATES, &CMainFrame::OnCheckForUpdates)
 	ON_WM_SETTINGCHANGE()
 	ON_WM_SYSCOLORCHANGE()
 	ON_WM_PALETTECHANGED()
@@ -188,6 +190,12 @@ void CMainFrame::OnUserManual()
 {
     CWebBrowserDlg dlgWebBrowser(this);
     dlgWebBrowser.DoModal();
+}
+
+void CMainFrame::OnCheckForUpdates()
+{
+    CCheckForUpdatesDlg dlgCheckForUpdates(this);
+    dlgCheckForUpdates.DoModal();
 }
 
 #pragma warning(suppress: 26434)

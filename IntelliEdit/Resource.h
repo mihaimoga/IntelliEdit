@@ -40,7 +40,10 @@
 #define PNG_WRITELARGE                  310
 #define PNG_WRITESMALL                  311
 #define IDD_WebBrowserDlg               312
+#define IDD_CheckForUpdatesDlg          313
 #define IDC_CUSTOM_CONTROL              1000
+#define IDC_STATUS                      1001
+#define IDC_PROGRESS                    1002
 #define IDC_REGULAR_EXPRESSION          2000
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_LANGUAGE_VBSCRIPT            32771
@@ -59,6 +62,7 @@
 #define IDC_DISCUSSIONS                 32790
 #define IDC_WIKI                        32791
 #define IDC_USER_MANUAL                 32794
+#define IDC_CHECK_FOR_UPDATES           32795
 #define ID_INDICATOR_LINE               61446
 #define IDS_LINE_INDICATOR              61447
 #define ID_INDICATOR_STYLE              61448
@@ -70,9 +74,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        313
-#define _APS_NEXT_COMMAND_VALUE         32795
-#define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           313
+#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_COMMAND_VALUE         32796
+#define _APS_NEXT_CONTROL_VALUE         1003
+#define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

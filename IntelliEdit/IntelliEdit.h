@@ -23,6 +23,7 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 
 #include "resource.h"       // main symbols
 #include "sinstance.h"
+#include "VersionInfo.h"
 
 // CIntelliEditApp:
 // See IntelliEdit.cpp for the implementation of this class
@@ -40,6 +41,7 @@ public:
 	//Member variables
 	HINSTANCE m_hScintilla;
 	HINSTANCE m_hLexilla;
+	CVersionInfo m_pVersionInfo;
 
 // Overrides
 public:

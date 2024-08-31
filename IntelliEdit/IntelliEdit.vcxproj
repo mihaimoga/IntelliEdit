@@ -187,6 +187,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AppSettings.h" />
+    <ClInclude Include="CheckForUpdatesDlg.h" />
     <ClInclude Include="ChildFrame.h" />
     <ClInclude Include="EdgeWebBrowser.h" />
     <ClInclude Include="framework.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="WebBrowserDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CheckForUpdatesDlg.cpp" />
     <ClCompile Include="ChildFrame.cpp" />
     <ClCompile Include="EdgeWebBrowser.cpp" />
     <ClCompile Include="HLinkCtrl.cpp" />
