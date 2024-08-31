@@ -188,12 +188,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ChildFrame.h" />
+    <ClInclude Include="EdgeWebBrowser.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="HLinkCtrl.h" />
     <ClInclude Include="IntelliEdit.h" />
     <ClInclude Include="IntelliEditDoc.h" />
     <ClInclude Include="IntelliEditView.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="Messages.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScintillaCtrl.h" />
@@ -201,9 +203,11 @@
     <ClInclude Include="sinstance.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VersionInfo.h" />
+    <ClInclude Include="WebBrowserDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrame.cpp" />
+    <ClCompile Include="EdgeWebBrowser.cpp" />
     <ClCompile Include="HLinkCtrl.cpp" />
     <ClCompile Include="IntelliEdit.cpp" />
     <ClCompile Include="IntelliEditDoc.cpp" />
@@ -219,6 +223,7 @@
     <ClCompile Include="ScintillaDocView.cpp" />
     <ClCompile Include="sinstance.cpp" />
     <ClCompile Include="VersionInfo.cpp" />
+    <ClCompile Include="WebBrowserDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CODE_OF_CONDUCT.md" />
@@ -226,6 +231,7 @@
     <None Include="..\LICENSE" />
     <None Include="..\README.md" />
     <None Include="IntelliEdit.reg" />
+    <None Include="packages.config" />
     <None Include="ReleaseNotes.html" />
     <None Include="res\IntelliEdit.rc2" />
     <None Include="res\ribbon.mfcribbon-ms" />
@@ -250,5 +256,14 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Web.WebView2.1.0.2739.15\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.2739.15\build\native\Microsoft.Web.WebView2.targets')" />
+    <Import Project="..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240803.1\build\native\Microsoft.Windows.ImplementationLibrary.targets" Condition="Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240803.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.2739.15\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.2739.15\build\native\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240803.1\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.ImplementationLibrary.1.0.240803.1\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
+  </Target>
 </Project>

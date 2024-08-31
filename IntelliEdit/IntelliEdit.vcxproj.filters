@@ -57,6 +57,15 @@
     <ClInclude Include="sinstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EdgeWebBrowser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WebBrowserDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IntelliEdit.cpp">
@@ -92,6 +101,12 @@
     <ClCompile Include="sinstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EdgeWebBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WebBrowserDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="IntelliEdit.reg" />
@@ -107,6 +122,7 @@
     <None Include="..\CODE_OF_CONDUCT.md" />
     <None Include="..\CONTRIBUTING.md" />
     <None Include="..\README.md" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IntelliEdit.rc">

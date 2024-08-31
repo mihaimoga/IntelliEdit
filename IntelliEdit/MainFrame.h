@@ -59,6 +59,7 @@ protected:
 	afx_msg void OnIssues();
 	afx_msg void OnDiscussions();
 	afx_msg void OnWiki();
+	afx_msg void OnUserManual();
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	afx_msg void OnSysColorChange();
 	afx_msg void OnPaletteChanged(CWnd* pFocusWnd);
