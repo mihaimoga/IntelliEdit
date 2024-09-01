@@ -249,7 +249,7 @@ BOOL CIntelliEditApp::InitInstance()
 
 			CXMLAppSettings pAppSettings(GetAppSettingsFilePath(), true, true);
 			pAppSettings.WriteString(IntelliEditSection, _T("Version"), m_pVersionInfo.GetProductVersionAsString().c_str());
-			pAppSettings.WriteString(IntelliEditSection, _T("Download"), _T("https://www.moga.doctor/freeware/IntelliEditSetup.msi"));
+			pAppSettings.WriteString(IntelliEditSection, _T("Download"), INSTALLER_URL);
 		}
 		catch (CAppSettingsException& pException)
 		{

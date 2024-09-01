@@ -50,6 +50,7 @@ END_MESSAGE_MAP()
 // CCheckForUpdatesDlg message handlers
 
 bool g_bThreadRunning = false;
+bool g_bNewUpdateFound = false;
 DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 {
 	const HRESULT hr{ CoInitialize(nullptr) };
@@ -81,8 +82,8 @@ DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 			{
 				try {
 					CXMLAppSettings pAppSettings(std::wstring(strFileName), true, true);
-					std::wstring strVersion = pAppSettings.GetString(IntelliEditSection, _T("Version"));
-					std::wstring strDownload = pAppSettings.GetString(IntelliEditSection, _T("Download"));
+					const std::wstring strVersion = pAppSettings.GetString(IntelliEditSection, _T("Version"));
+					const std::wstring strDownload = pAppSettings.GetString(IntelliEditSection, _T("Download"));
 
 					if (g_bThreadRunning)
 					{
@@ -91,7 +92,7 @@ DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 
 						if (dlgCheckForUpdates->m_pVersionInfo.Load(lpszFullPath))
 						{
-							g_bThreadRunning = _tcscmp(strVersion.c_str(), dlgCheckForUpdates->m_pVersionInfo.GetProductVersionAsString().c_str());
+							g_bThreadRunning = (strVersion.compare(dlgCheckForUpdates->m_pVersionInfo.GetProductVersionAsString()) != 0);
 						}
 					}
 
@@ -104,6 +105,9 @@ DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 						dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(_T("Downloading..."));
 						if (URLDownloadToFile(nullptr, strDownload.c_str(), strFileName, 0, nullptr) == S_OK)
 						{
+							g_bNewUpdateFound = true;
+							dlgCheckForUpdates->MessageBox(_T("Please close the application to start the installer!"), _T("IntelliEdit"), MB_OK | MB_ICONEXCLAMATION);
+
 							SHELLEXECUTEINFO pShellExecuteInfo;
 							pShellExecuteInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 							pShellExecuteInfo.fMask = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_NOCLOSEPROCESS | SEE_MASK_DOENVSUBST;
@@ -114,8 +118,6 @@ DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 							pShellExecuteInfo.lpDirectory = nullptr;
 							pShellExecuteInfo.nShow = SW_SHOWNORMAL;
 							VERIFY(ShellExecuteEx(&pShellExecuteInfo));
-
-							dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(_T("Please close the application to start the installer!"));
 						}
 						else
 						{
@@ -138,8 +140,6 @@ DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 		}
 	}
 	dlgCheckForUpdates->m_ctrlProgress.SetMarquee(FALSE, 30);
-	MessageBeep(MB_OK);
-	::Sleep(3000);
 	g_bThreadRunning = false;
 
 	::ExitThread(0);
@@ -194,13 +194,17 @@ void CCheckForUpdatesDlg::OnCancel()
 
 void CCheckForUpdatesDlg::OnTimer(UINT_PTR nIDEvent)
 {
+	CDialogEx::OnTimer(nIDEvent);
+
 	if (m_nTimerID == nIDEvent)
 	{
 		if (!g_bThreadRunning)
 		{
 			CDialogEx::OnCancel();
+			if (g_bNewUpdateFound)
+			{
+				PostQuitMessage(0);
+			}
 		}
 	}
-
-	CDialogEx::OnTimer(nIDEvent);
 }

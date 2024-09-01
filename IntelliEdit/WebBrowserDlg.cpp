@@ -40,6 +40,7 @@ void CWebBrowserDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CWebBrowserDlg, CDialogEx)
 	ON_WM_DESTROY()
+    ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CWebBrowserDlg message handlers
@@ -76,4 +77,14 @@ void CWebBrowserDlg::OnDestroy()
     VERIFY(m_pCustomControl.DestroyWindow());
 	
     CDialogEx::OnDestroy();
+}
+
+void CWebBrowserDlg::OnSize(UINT nType, int cx, int cy)
+{
+    CDialogEx::OnSize(nType, cx, cy);
+
+    if (m_pCustomControl.GetSafeHwnd() != nullptr)
+    {
+        m_pCustomControl.MoveWindow(0, 0, cx, cy);
+    }
 }
