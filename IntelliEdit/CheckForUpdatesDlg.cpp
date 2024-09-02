@@ -19,7 +19,13 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "pch.h"
 #include "IntelliEdit.h"
 #include "CheckForUpdatesDlg.h"
-#include "AppSettings.h"
+
+#include "../genUp4win/genUp4win.h"
+#ifdef _DEBUG
+#pragma comment(lib, "../x64/Debug/genUp4win.lib")
+#else
+#pragma comment(lib, "../x64/Release/genUp4win.lib")
+#endif
 
 // CCheckForUpdatesDlg dialog
 
@@ -48,134 +54,54 @@ BEGIN_MESSAGE_MAP(CCheckForUpdatesDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // CCheckForUpdatesDlg message handlers
+CCheckForUpdatesDlg* g_dlgCheckForUpdates = nullptr;
+void UI_Callback(int, const std::wstring& strMessage)
+{
+	if (g_dlgCheckForUpdates != nullptr)
+	{
+		g_dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(strMessage.c_str());
+		g_dlgCheckForUpdates->m_ctrlStatusMessage.UpdateWindow();
+	}
+}
 
 bool g_bThreadRunning = false;
 bool g_bNewUpdateFound = false;
 DWORD WINAPI UpdateThreadProc(LPVOID lpParam)
 {
-	const HRESULT hr{ CoInitialize(nullptr) };
-	if (FAILED(hr))
-		return 1;
-
-	TCHAR lpszDrive[_MAX_DRIVE];
-	TCHAR lpszDirectory[_MAX_DIR];
-	TCHAR lpszFilename[_MAX_FNAME];
-	TCHAR lpszExtension[_MAX_EXT];
-	TCHAR lpszFullPath[_MAX_PATH];
+	UNREFERENCED_PARAMETER(lpParam);
 
 	g_bThreadRunning = true;
-	CCheckForUpdatesDlg* dlgCheckForUpdates = (CCheckForUpdatesDlg*)lpParam;
-	dlgCheckForUpdates->m_ctrlProgress.SetMarquee(TRUE, 30);
-	dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(_T("Connecting..."));
-
-	TCHAR lpszTempPath[_MAX_PATH] = { 0 };
-	DWORD nLength = GetTempPath(_MAX_PATH, lpszTempPath);
-	if (nLength > 0)
+	if (g_dlgCheckForUpdates != nullptr)
 	{
-		TCHAR lpszFilePath[_MAX_PATH] = { 0 };
-		nLength = GetTempFileName(lpszTempPath, nullptr, 0, lpszFilePath);
-		if (nLength > 0)
-		{
-			CString strFileName = lpszFilePath;
-			strFileName.Replace(_T(".tmp"), _T(".xml"));
-			if (URLDownloadToFile(nullptr, APPLICATION_URL, strFileName, 0, nullptr) == S_OK)
-			{
-				try {
-					CXMLAppSettings pAppSettings(std::wstring(strFileName), true, true);
-					const std::wstring strVersion = pAppSettings.GetString(IntelliEditSection, _T("Version"));
-					const std::wstring strDownload = pAppSettings.GetString(IntelliEditSection, _T("Download"));
-
-					if (g_bThreadRunning)
-					{
-						VERIFY(0 == _tsplitpath_s(AfxGetApp()->m_pszHelpFilePath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT));
-						VERIFY(0 == _tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".exe")));
-
-						if (dlgCheckForUpdates->m_pVersionInfo.Load(lpszFullPath))
-						{
-							g_bThreadRunning = (strVersion.compare(dlgCheckForUpdates->m_pVersionInfo.GetProductVersionAsString()) != 0);
-						}
-					}
-
-					if (g_bThreadRunning)
-					{
-						nLength = GetTempFileName(lpszTempPath, nullptr, 0, lpszFilePath);
-						strFileName = lpszFilePath;
-						strFileName.Replace(_T(".tmp"), _T(".msi"));
-
-						dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(_T("Downloading..."));
-						if (URLDownloadToFile(nullptr, strDownload.c_str(), strFileName, 0, nullptr) == S_OK)
-						{
-							g_bNewUpdateFound = true;
-							dlgCheckForUpdates->MessageBox(_T("Please close the application to start the installer!"), _T("IntelliEdit"), MB_OK | MB_ICONEXCLAMATION);
-
-							SHELLEXECUTEINFO pShellExecuteInfo;
-							pShellExecuteInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-							pShellExecuteInfo.fMask = SEE_MASK_FLAG_DDEWAIT | SEE_MASK_NOCLOSEPROCESS | SEE_MASK_DOENVSUBST;
-							pShellExecuteInfo.hwnd = dlgCheckForUpdates->GetSafeHwnd();
-							pShellExecuteInfo.lpVerb = _T("open");
-							pShellExecuteInfo.lpFile = strFileName;
-							pShellExecuteInfo.lpParameters = nullptr;
-							pShellExecuteInfo.lpDirectory = nullptr;
-							pShellExecuteInfo.nShow = SW_SHOWNORMAL;
-							VERIFY(ShellExecuteEx(&pShellExecuteInfo));
-						}
-						else
-						{
-							dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(_T("Unknown Error!"));
-						}
-					}
-				}
-				catch (CAppSettingsException& pException)
-				{
-					const int nErrorLength = 0x100;
-					TCHAR lpszErrorMessage[nErrorLength] = { 0, };
-					pException.GetErrorMessage(lpszErrorMessage, nErrorLength);
-					TRACE(_T("%s\n"), lpszErrorMessage);
-				}
-			}
-			else
-			{
-				dlgCheckForUpdates->m_ctrlStatusMessage.SetWindowText(_T("Unknown Error!"));
-			}
-		}
+		g_dlgCheckForUpdates->m_ctrlProgress.SetMarquee(TRUE, 30);
 	}
-	dlgCheckForUpdates->m_ctrlProgress.SetMarquee(FALSE, 30);
+	const DWORD nLength = _MAX_PATH;
+	TCHAR lpszFilePath[nLength] = { 0, };
+	GetModuleFileName(nullptr, lpszFilePath, nLength);
+	g_bNewUpdateFound = CheckForUpdates(lpszFilePath, APPLICATION_URL, UI_Callback);
+	if (g_dlgCheckForUpdates != nullptr)
+	{
+		g_dlgCheckForUpdates->m_ctrlProgress.SetMarquee(FALSE, 30);
+	}
 	g_bThreadRunning = false;
 
 	::ExitThread(0);
 	return 0;
 }
 
-bool WaitWithMessageLoop(HANDLE hEvent, DWORD dwTimeout)
-{
-	DWORD dwRet;
-	MSG msg;
-	hEvent = hEvent ? hEvent : CreateEvent(NULL, FALSE, FALSE, NULL);
-
-	while (true)
-	{
-		dwRet = MsgWaitForMultipleObjects(1, &hEvent, FALSE, dwTimeout, QS_ALLINPUT);
-		if (dwRet == WAIT_OBJECT_0)
-			return TRUE;
-		if (dwRet != WAIT_OBJECT_0 + 1)
-			break;
-		while (PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (WaitForSingleObject(hEvent, 0) == WAIT_OBJECT_0)
-				return true;
-		}
-	}
-	return false;
-}
-
 BOOL CCheckForUpdatesDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	m_hUpdateThread = ::CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)UpdateThreadProc, this, 0, &m_nUpdateThreadID);
+#ifdef _DEBUG
+	const DWORD nLength = _MAX_PATH;
+	TCHAR lpszFilePath[nLength] = { 0, };
+	GetModuleFileName(nullptr, lpszFilePath, nLength);
+	WriteConfigFile(lpszFilePath, INSTALLER_URL);
+#endif
 
+	g_dlgCheckForUpdates = this;
+	m_hUpdateThread = ::CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)UpdateThreadProc, this, 0, &m_nUpdateThreadID);
 	m_nTimerID = SetTimer(0x1234, 100, nullptr);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -184,11 +110,8 @@ BOOL CCheckForUpdatesDlg::OnInitDialog()
 
 void CCheckForUpdatesDlg::OnCancel()
 {
-	if (g_bThreadRunning)
-	{
-		g_bThreadRunning = false;
-		VERIFY(WaitWithMessageLoop(m_hUpdateThread, INFINITE));
-	}
+	while (g_bThreadRunning)
+		Sleep(1000);
 	CDialogEx::OnCancel();
 }
 

@@ -27,7 +27,6 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 
 #include "VersionInfo.h"
 #include "HLinkCtrl.h"
-#include "AppSettings.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -74,30 +73,6 @@ CIntelliEditApp::CIntelliEditApp() noexcept : m_pInstanceChecker(_T("IntelliEdit
 CIntelliEditApp theApp;
 
 // CIntelliEditApp initialization
-
-const std::wstring GetAppSettingsFilePath()
-{
-	TCHAR lpszModuleFilePath[_MAX_PATH];
-	TCHAR lpszDrive[_MAX_DRIVE];
-	TCHAR lpszDirectory[_MAX_DIR];
-	TCHAR lpszFilename[_MAX_FNAME];
-	TCHAR lpszExtension[_MAX_EXT];
-	TCHAR lpszFullPath[_MAX_PATH];
-
-	WCHAR* lpszSpecialFolderPath = nullptr;
-	if ((SHGetKnownFolderPath(FOLDERID_Profile, 0, nullptr, &lpszSpecialFolderPath)) == S_OK)
-	{
-		std::wstring result(lpszSpecialFolderPath);
-		CoTaskMemFree(lpszSpecialFolderPath);
-		result += _T("\\IntelliEdit.xml");
-		return result;
-	}
-
-	VERIFY(0 != GetModuleFileName(NULL, lpszModuleFilePath, _MAX_PATH));
-	VERIFY(0 == _tsplitpath_s(AfxGetApp()->m_pszHelpFilePath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT));
-	VERIFY(0 == _tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, _T("IntelliEdit"), _T(".xml")));
-	return lpszFullPath;
-}
 
 BOOL CIntelliEditApp::InitInstance()
 {
@@ -229,37 +204,6 @@ BOOL CIntelliEditApp::InitInstance()
 
 	// If this is the first instance of our App then track it so any other instances can find us
 	m_pInstanceChecker.TrackFirstInstanceRunning(m_pMainWnd->GetSafeHwnd());
-
-#ifdef _DEBUG
-	TCHAR lpszDrive[_MAX_DRIVE];
-	TCHAR lpszDirectory[_MAX_DIR];
-	TCHAR lpszFilename[_MAX_FNAME];
-	TCHAR lpszExtension[_MAX_EXT];
-	TCHAR lpszFullPath[_MAX_PATH];
-
-	VERIFY(0 == _tsplitpath_s(AfxGetApp()->m_pszHelpFilePath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT));
-	VERIFY(0 == _tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".exe")));
-
-	if (m_pVersionInfo.Load(lpszFullPath))
-	{
-		try {
-			const HRESULT hr{ CoInitialize(nullptr) };
-			if (FAILED(hr))
-				return FALSE;
-
-			CXMLAppSettings pAppSettings(GetAppSettingsFilePath(), true, true);
-			pAppSettings.WriteString(IntelliEditSection, _T("Version"), m_pVersionInfo.GetProductVersionAsString().c_str());
-			pAppSettings.WriteString(IntelliEditSection, _T("Download"), INSTALLER_URL);
-		}
-		catch (CAppSettingsException& pException)
-		{
-			const int nErrorLength = 0x100;
-			TCHAR lpszErrorMessage[nErrorLength] = { 0, };
-			pException.GetErrorMessage(lpszErrorMessage, nErrorLength);
-			TRACE(_T("%s\n"), lpszErrorMessage);
-		}
-	}
-#endif
 
 	return TRUE;
 }

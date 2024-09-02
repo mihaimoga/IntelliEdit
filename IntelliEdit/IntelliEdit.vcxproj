@@ -187,7 +187,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AppSettings.h" />
     <ClInclude Include="CheckForUpdatesDlg.h" />
     <ClInclude Include="ChildFrame.h" />
     <ClInclude Include="EdgeWebBrowser.h" />
