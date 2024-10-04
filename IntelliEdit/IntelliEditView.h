@@ -49,6 +49,7 @@ protected:
 	Scintilla::ILexer5* m_rsLexer;
 	Scintilla::ILexer5* m_shLexer;
 	Scintilla::ILexer5* m_sqlLexer;
+	Scintilla::ILexer5* m_tclLexer;
 	Scintilla::ILexer5* m_xmlLexer;
 
 // Operations

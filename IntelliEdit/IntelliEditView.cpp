@@ -187,6 +187,40 @@ const TCHAR* g_sqlKeywords
 	_T("isnull last_insert_id nullif session_user system_user user version")
 };
 
+const TCHAR* g_tclKeywords
+{
+	/* https://www.tcl-lang.org/man/tcl8.5/UserCmd/contents.htm */
+	_T("tclsh wish ")
+	/* Tcl commands */
+	_T("after append apply array auto_execok auto_import auto_load auto_mkindex ")
+	_T("auto_mkindex_old auto_qualify auto_reset bgerror binary break catch cd ")
+	_T("chan clock close concat continue dde dict encoding eof error eval exec ")
+	_T("exit expr fblocked fconfigure fcopy file fileevent filename flush for ")
+	_T("foreach format gets glob global history http if incr info interp join ")
+	_T("lappend lassign lindex linsert list llength load lrange lrepeat lreplace ")
+	_T("lreverse lsearch lset lsort mathfunc mathop memory msgcat namespace open ")
+	_T("package parray pid pkg::create pkg_mkIndex platform platform::shell proc ")
+	_T("puts pwd re_syntax read refchan regexp registry regsub rename return ")
+	_T("Safe Base scan seek set socket source split string subst switch Tcl ")
+	_T("tcl_endOfWord tcl_findLibrary tcl_startOfNextWord tcl_startOfPreviousWord ")
+	_T("tcl_wordBreakAfter tcl_wordBreakBefore tcltest tclvars tell time tm trace ")
+	_T("unknown unload unset update uplevel upvar variable vwait while ")
+	/* Tk commands */
+	_T("bell bind bindtags bitmap button canvas checkbutton clipboard colors ")
+	_T("console cursors destroy entry event focus font frame grab grid image ")
+	_T("keysyms label labelframe listbox loadTk lower menu menubutton message ")
+	_T("option options pack panedwindow photo place radiobutton raise scale ")
+	_T("scrollbar selection send spinbox text tk tk::mac tk_bisque tk_chooseColor ")
+	_T("tk_chooseDirectory tk_dialog tk_focusFollowsMouse tk_focusNext tk_focusPrev ")
+	_T("tk_getOpenFile tk_getSaveFile tk_menuSetFocus tk_messageBox tk_optionMenu ")
+	_T("tk_popup tk_setPalette tk_textCopy tk_textCut tk_textPaste tkerror tkvars ")
+	_T("tkwait toplevel ttk::button ttk::checkbutton ttk::combobox ttk::entry ")
+	_T("ttk::frame ttk::intro ttk::label ttk::labelframe ttk::menubutton ")
+	_T("ttk::notebook ttk::panedwindow ttk::progressbar ttk::radiobutton ")
+	_T("ttk::scale ttk::scrollbar ttk::separator ttk::sizegrip ttk::spinbox ")
+	_T("ttk::style ttk::treeview ttk::widget ttk_image ttk_vsapi winfo wm ")
+};
+
 // CIntelliEditView
 
 IMPLEMENT_DYNCREATE(CIntelliEditView, CScintillaView)
@@ -234,7 +268,8 @@ CIntelliEditView::CIntelliEditView() noexcept :
 	m_rLexer { nullptr },
 	m_rsLexer { nullptr },
 	m_shLexer { nullptr },
-	m_sqlLexer{ nullptr },
+	m_sqlLexer { nullptr },
+	m_tclLexer { nullptr },
 	m_xmlLexer { nullptr }
 {
 	LoadMarginSettings();
@@ -453,26 +488,35 @@ void CIntelliEditView::OnInitialUpdate()
 																		}
 																		else
 																		{
-																			if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
+																			if (_tcsicmp(lpszExtension, _T(".tcl")) == 0)
 																			{
-																				// Setup the XML Lexer
-																				rCtrl.SetILexer(m_xmlLexer);
+																				// Setup the TCL Lexer
+																				rCtrl.SetILexer(m_tclLexer);
+																				rCtrl.SetKeyWords(0, g_tclKeywords);
 																			}
 																			else
 																			{
-																				if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-																					(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
-																					(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
-																					(_tcsicmp(lpszExtension, _T("")) == 0))
+																				if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
 																				{
-																					rCtrl.SetupDirectAccess();
-																					rCtrl.SetILexer(nullptr);
+																					// Setup the XML Lexer
+																					rCtrl.SetILexer(m_xmlLexer);
 																				}
 																				else
 																				{
-																					// Setup the C++ Lexer
-																					rCtrl.SetILexer(m_cppLexer);
-																					rCtrl.SetKeyWords(0, g_cppKeywords);
+																					if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
+																						(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
+																						(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
+																						(_tcsicmp(lpszExtension, _T("")) == 0))
+																					{
+																						rCtrl.SetupDirectAccess();
+																						rCtrl.SetILexer(nullptr);
+																					}
+																					else
+																					{
+																						// Setup the C++ Lexer
+																						rCtrl.SetILexer(m_cppLexer);
+																						rCtrl.SetKeyWords(0, g_cppKeywords);
+																					}
 																				}
 																			}
 																		}
@@ -494,8 +538,8 @@ void CIntelliEditView::OnInitialUpdate()
 		}
 	}
 
+	SetAStyle(static_cast<int>(Scintilla::StylesCommon::Default), RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 10, "Consolas");
 	// Setup styles
-	SetAStyle(static_cast<int>(Scintilla::StylesCommon::Default), RGB(0, 0, 0), RGB(0xff, 0xff, 0xff), 11, "Consolas");
 	rCtrl.StyleClearAll();
 	SetAStyle(SCE_C_DEFAULT, RGB(0, 0, 0));
 	SetAStyle(SCE_C_COMMENT, RGB(0, 0x80, 0));
@@ -511,6 +555,32 @@ void CIntelliEditView::OnInitialUpdate()
 	SetAStyle(SCE_C_IDENTIFIER, RGB(0, 0, 0));
 	SetAStyle(SCE_C_PREPROCESSOR, RGB(0x80, 0, 0));
 	SetAStyle(SCE_C_OPERATOR, RGB(0x80, 0x80, 0));
+	/* TCL/TK */
+	SetAStyle(SCE_TCL_DEFAULT, RGB(0, 0, 0));
+	SetAStyle(SCE_TCL_COMMENT, RGB(0, 0x80, 0));
+	SetAStyle(SCE_TCL_COMMENTLINE, RGB(0, 0x80, 0));
+	SetAStyle(SCE_TCL_COMMENT_BOX, RGB(0, 0x80, 0));
+	SetAStyle(SCE_TCL_BLOCK_COMMENT, RGB(0, 0x80, 0));
+	SetAStyle(SCE_TCL_NUMBER, RGB(0, 0x80, 0x80));
+	SetAStyle(SCE_TCL_WORD, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD, 1);
+	SetAStyle(SCE_TCL_WORD2, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD2, 1);
+	SetAStyle(SCE_TCL_WORD3, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD3, 1);
+	SetAStyle(SCE_TCL_WORD4, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD4, 1);
+	SetAStyle(SCE_TCL_WORD5, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD5, 1);
+	SetAStyle(SCE_TCL_WORD6, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD6, 1);
+	SetAStyle(SCE_TCL_WORD7, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD7, 1);
+	SetAStyle(SCE_TCL_WORD8, RGB(0, 0, 0x80));
+	rCtrl.StyleSetBold(SCE_TCL_WORD8, 1);
+	SetAStyle(SCE_TCL_IN_QUOTE, RGB(0x80, 0, 0x80));
+	SetAStyle(SCE_TCL_IDENTIFIER, RGB(0, 0, 0));
+	SetAStyle(SCE_TCL_OPERATOR, RGB(0x80, 0x80, 0));
 
 	// Setup folding
 	rCtrl.SetMarginWidthN(2, 16);
@@ -528,14 +598,14 @@ void CIntelliEditView::OnInitialUpdate()
 	DefineMarker(static_cast<int>(Scintilla::MarkerOutline::FolderOpenMid), Scintilla::MarkerSymbol::Empty, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
 	DefineMarker(static_cast<int>(Scintilla::MarkerOutline::FolderMidTail), Scintilla::MarkerSymbol::Empty, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
 
-	//Setup auto completion
-	rCtrl.AutoCSetSeparator(10); //Use a separator of line feed
+	// Setup auto completion
+	rCtrl.AutoCSetSeparator(10); // Use a separator of line feed
 
 	// Setup call tips
 	rCtrl.SetMouseDwellTime(1000);
 
 	// Enable Multiple selection
-	rCtrl.SetMultipleSelection(TRUE);
+	// rCtrl.SetMultipleSelection(TRUE);
 
 	// Show line numbers
 	rCtrl.SetMarginWidthN(0, 32);
@@ -1042,6 +1112,15 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_sqlLexer = theApp.m_pCreateLexer("sql");
 		if (m_sqlLexer == nullptr)
+			return -1;
+	}
+
+	// Create the TCL Lexer
+#pragma warning(suppress: 26429)
+	if (m_tclLexer == nullptr)
+	{
+		m_tclLexer = theApp.m_pCreateLexer("tcl");
+		if (m_tclLexer == nullptr)
 			return -1;
 	}
 
