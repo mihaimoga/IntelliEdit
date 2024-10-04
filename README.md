@@ -105,6 +105,7 @@ The following Programming Languages are supported by _IntelliEdit_:
 - R
 - Rust
 - SQL
+- TCL/TK
 - XML
 
 ## Create and Submit your Pull Request
