@@ -129,7 +129,7 @@ BOOL CIntelliEditApp::InitInstance()
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
 		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
-	//Load the Scintilla \ Lexilla dlls
+	// Load the Scintilla \ Lexilla dlls
 	CString sLexillaDLL;
 	sLexillaDLL.Format(_T("%s%s"), _T(LEXILLA_LIB), _T(LEXILLA_EXTENSION));
 	m_hLexilla = LoadLibraryFromApplicationDirectory(sLexillaDLL);
@@ -147,7 +147,7 @@ BOOL CIntelliEditApp::InitInstance()
 		return FALSE;
 	}
 
-	//Create the C++ Lexer from Lexilla
+	// Create the C++ Lexer from Lexilla
 #pragma warning(suppress: 26490)
 	m_pCreateLexer = reinterpret_cast<Lexilla::CreateLexerFn>(GetProcAddress(m_hLexilla, LEXILLA_CREATELEXER));
 	if (m_pCreateLexer == nullptr)
@@ -157,7 +157,8 @@ BOOL CIntelliEditApp::InitInstance()
 	}
 
 	SetRegistryKey(_T("Mihai Moga"));
-	LoadStdProfileSettings(); //Load standard INI file options (including MRU)
+
+	LoadStdProfileSettings(10); //Load standard INI file options (including MRU)
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
@@ -180,7 +181,7 @@ BOOL CIntelliEditApp::InitInstance()
 	m_pMainWnd = pMainFrame;
 
 	// call DragAcceptFiles only if there's a suffix
-	//  In an MDI app, this should occur immediately after setting m_pMainWnd
+	// In an MDI app, this should occur immediately after setting m_pMainWnd
 	// Enable drag/drop open
 	m_pMainWnd->DragAcceptFiles();
 
@@ -233,7 +234,7 @@ HMODULE CIntelliEditApp::LoadLibraryFromApplicationDirectory(LPCTSTR lpFileName)
 {
 	//Get the Application directory
 	CString sFullPath;
-	const DWORD dwGMFN{ GetModuleFileName(nullptr, sFullPath.GetBuffer(_MAX_PATH), _MAX_PATH) };
+	const DWORD dwGMFN{ GetModuleFileName(nullptr, sFullPath.GetBuffer(0x1000 /* _MAX_PATH */), 0x1000 /* _MAX_PATH */) };
 	sFullPath.ReleaseBuffer();
 	if (dwGMFN == 0)
 #pragma warning(suppress: 26487)
@@ -250,7 +251,7 @@ HMODULE CIntelliEditApp::LoadLibraryFromApplicationDirectory(LPCTSTR lpFileName)
 	_tsplitpath_s(lpFileName, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
 	sExt.ReleaseBuffer();
 	sFname.ReleaseBuffer();
-	_tmakepath_s(sFullPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
+	_tmakepath_s(sFullPath.GetBuffer(0x1000 /* _MAX_PATH */), 0x1000 /* _MAX_PATH */, sDrive, sDir, sFname, sExt);
 	sFullPath.ReleaseBuffer();
 
 	//Delegate to LoadLibrary
@@ -315,10 +316,10 @@ BOOL CAboutDlg::OnInitDialog()
 	TCHAR lpszDirectory[_MAX_DIR];
 	TCHAR lpszFilename[_MAX_FNAME];
 	TCHAR lpszExtension[_MAX_EXT];
-	TCHAR lpszFullPath[_MAX_PATH];
+	TCHAR lpszFullPath[0x1000 /* _MAX_PATH */];
 
 	VERIFY(0 == _tsplitpath_s(AfxGetApp()->m_pszHelpFilePath, lpszDrive, _MAX_DRIVE, lpszDirectory, _MAX_DIR, lpszFilename, _MAX_FNAME, lpszExtension, _MAX_EXT));
-	VERIFY(0 == _tmakepath_s(lpszFullPath, _MAX_PATH, lpszDrive, lpszDirectory, lpszFilename, _T(".exe")));
+	VERIFY(0 == _tmakepath_s(lpszFullPath, 0x1000 /* _MAX_PATH */, lpszDrive, lpszDirectory, lpszFilename, _T(".exe")));
 
 	if (m_pVersionInfo.Load(lpszFullPath))
 	{

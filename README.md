@@ -83,7 +83,7 @@ The **Bookmark** menu allows you to navigate and manipulate Bookmarks.
 
 ## Supported Programming Languages
 
-The following Programming Languages are supported by _IntelliEdit_:
+The following programming languages are supported by _IntelliEdit_:
 
 - ASP
 - Bash
