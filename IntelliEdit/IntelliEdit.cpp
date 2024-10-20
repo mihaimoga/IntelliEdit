@@ -232,15 +232,15 @@ int CIntelliEditApp::ExitInstance()
 
 HMODULE CIntelliEditApp::LoadLibraryFromApplicationDirectory(LPCTSTR lpFileName)
 {
-	//Get the Application directory
+	// Get the Application directory
 	CString sFullPath;
-	const DWORD dwGMFN{ GetModuleFileName(nullptr, sFullPath.GetBuffer(0x1000 /* _MAX_PATH */), 0x1000 /* _MAX_PATH */) };
+	const DWORD dwGMFN{ GetModuleFileName(nullptr, sFullPath.GetBuffer(_MAX_PATH), _MAX_PATH) };
 	sFullPath.ReleaseBuffer();
 	if (dwGMFN == 0)
 #pragma warning(suppress: 26487)
 		return nullptr;
 
-	//Form the new path
+	// Form the new path
 	CString sDrive;
 	CString sDir;
 	_tsplitpath_s(sFullPath, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, nullptr, 0, nullptr, 0);
@@ -251,10 +251,10 @@ HMODULE CIntelliEditApp::LoadLibraryFromApplicationDirectory(LPCTSTR lpFileName)
 	_tsplitpath_s(lpFileName, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
 	sExt.ReleaseBuffer();
 	sFname.ReleaseBuffer();
-	_tmakepath_s(sFullPath.GetBuffer(0x1000 /* _MAX_PATH */), 0x1000 /* _MAX_PATH */, sDrive, sDir, sFname, sExt);
+	_tmakepath_s(sFullPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
 	sFullPath.ReleaseBuffer();
 
-	//Delegate to LoadLibrary
+	// Delegate to LoadLibrary
 #pragma warning(suppress: 26487)
 	return LoadLibrary(sFullPath);
 }

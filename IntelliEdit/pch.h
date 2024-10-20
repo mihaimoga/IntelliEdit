@@ -70,6 +70,6 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 
 #define INSTALLER_URL _T("https://www.moga.doctor/freeware/IntelliEditSetup.msi")
 #define APPLICATION_URL _T("https://www.moga.doctor/freeware/IntelliEdit.xml")
-#define USER_MANUAL_URL _T("https://www.moga.doctor/freeware/IntelliEdit.html")
+#define USER_MANUAL_URL _T("https://www.moga.doctor/intelliedit/")
 
 #endif //PCH_H
