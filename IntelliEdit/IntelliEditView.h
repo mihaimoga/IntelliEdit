@@ -34,7 +34,7 @@ protected: // create from serialization only
 public:
 	CIntelliEditDoc* GetDocument() const;
 protected:
-	//Member variables
+	// Member variables
 	Scintilla::ILexer5* m_batLexer;
 	Scintilla::ILexer5* m_cmakeLexer;
 	Scintilla::ILexer5* m_cppLexer;
@@ -51,6 +51,7 @@ protected:
 	Scintilla::ILexer5* m_sqlLexer;
 	Scintilla::ILexer5* m_tclLexer;
 	Scintilla::ILexer5* m_xmlLexer;
+	bool bLexerKeywords;
 
 // Operations
 public:
@@ -60,6 +61,7 @@ public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	void OnInitialUpdate() override;
+	virtual void Serialize(CArchive& ar);
 
 // Implementation
 public:
@@ -74,7 +76,7 @@ protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	//Methods
+	// Methods
 	void OnCharAdded(_Inout_ Scintilla::NotificationData* pSCNotification) override;
 	void OnDwellStart(_Inout_ Scintilla::NotificationData* pSCNotification) override;
 	void OnDwellEnd(_Inout_ Scintilla::NotificationData* pSCNotification) override;
@@ -84,7 +86,7 @@ protected:
 	void SetAStyle(int style, COLORREF fore, COLORREF back = RGB(0xff, 0xff, 0xff), int size = -1, const char* face = nullptr);
 	void DefineMarker(int marker, Scintilla::MarkerSymbol markerType, COLORREF fore, COLORREF back);
 
-	//Message handlers
+	// Message handlers
 	afx_msg void OnOptionsAddmarker();
 	afx_msg void OnOptionsDeletemarker();
 	afx_msg void OnUpdateOptionsDeletemarker(CCmdUI* pCmdUI);
@@ -103,6 +105,8 @@ protected:
 	afx_msg void OnUpdateInsert(CCmdUI* pCmdUI);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+
+	afx_msg void SelectHighlight(CString strTempPath);
 
 	DECLARE_MESSAGE_MAP()
 };
