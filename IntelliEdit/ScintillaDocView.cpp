@@ -161,6 +161,8 @@ History: PJN / 12-08-2004 1. Made all the remaining non virtual functions relate
          PJN / 06-05-2024 1. Rationalized some of the code in CScintillaView::Serialize.
                           2. The size of the buffer used in SScintillaView::Serialize can now be customized via a
                           member variable "m_nLoadSaveBufferSize".
+         PJN / 19-11-2024 1. Updated CScintillaView::Serialize to better handle loading a non UTF encoded file.
+                          Thanks to Jörg Hellenkamp for reporting this issue.
 
 Copyright (c) 2004 - 2024 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -920,7 +922,7 @@ void CScintillaView::OnEditRepeat()
 	//Validate our parameters
 	ASSERT_VALID(this);
 
-	if (!FindText(g_scintillaEditState.strFind, g_scintillaEditState.bNext, g_scintillaEditState.bCase, g_scintillaEditState.bWord, g_scintillaEditState.bRegularExpression))
+	if (!FindText(g_scintillaEditState.strFind, g_scintillaEditState.bNext, g_scintillaEditState.bCase, g_scintillaEditState.bWord, g_scintillaEditState.bRegularExpression)) //NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 		TextNotFound(g_scintillaEditState.strFind, g_scintillaEditState.bNext, g_scintillaEditState.bCase, g_scintillaEditState.bWord, g_scintillaEditState.bRegularExpression, FALSE);
 	else
 	{
@@ -1143,10 +1145,10 @@ LRESULT CScintillaView::OnFindReplaceCmd(WPARAM /*wParam*/, LPARAM lParam)
 #pragma warning(suppress: 26466)
 	const CScintillaFindReplaceDlg* pDialog{ static_cast<CScintillaFindReplaceDlg*>(CFindReplaceDialog::GetNotifier(lParam)) };
 #pragma warning(suppress: 26496)
-	AFXASSUME(pDialog != nullptr);
-	ASSERT(pDialog == g_scintillaEditState.pFindReplaceDlg);
+	AFXASSUME(pDialog != nullptr); //NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
+	ASSERT(pDialog == g_scintillaEditState.pFindReplaceDlg); //NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 
-	if (pDialog->IsTerminating())
+	if (pDialog->IsTerminating()) //NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 		g_scintillaEditState.pFindReplaceDlg = nullptr;
 	else if (pDialog->FindNext())
 		OnFindNext(pDialog->GetFindString(), pDialog->SearchDown(), pDialog->MatchCase(), pDialog->MatchWholeWord(), pDialog->GetRegularExpression());
@@ -1555,6 +1557,12 @@ void CScintillaView::Serialize(CArchive& ar)
 
 		//Set the document pointer to the loaded content
 		rCtrl.SetDocPointer(static_cast<IDocumentEditable*>(pLoader->ConvertToDocument())); //NOLINT(clang-analyzer-core.CallAndMessage)
+
+		//If we detected UTF data, then use the UTF8 codepage else disable multi-byte support
+		if (m_BOM == BOM::Unknown)
+			rCtrl.SetCodePage(0);
+		else
+			rCtrl.SetCodePage(CpUtf8);
 
 		//Set the read only state if required
 		if (m_bUseROFileAttributeDuringLoading && ((GetFileAttributes(pFile->GetFilePath()) & FILE_ATTRIBUTE_READONLY) == FILE_ATTRIBUTE_READONLY))

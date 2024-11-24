@@ -23,7 +23,6 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 
 #include "resource.h"       // main symbols
 #include "sinstance.h"
-#include "VersionInfo.h"
 
 // CIntelliEditApp:
 // See IntelliEdit.cpp for the implementation of this class
@@ -34,14 +33,12 @@ class CIntelliEditApp : public CWinAppEx
 public:
 	CIntelliEditApp() noexcept;
 
-
 public:
 	CInstanceChecker m_pInstanceChecker;
 	Lexilla::CreateLexerFn m_pCreateLexer;
 	//Member variables
 	HINSTANCE m_hScintilla;
 	HINSTANCE m_hLexilla;
-	CVersionInfo m_pVersionInfo;
 
 // Overrides
 public:

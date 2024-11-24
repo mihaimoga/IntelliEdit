@@ -20,6 +20,7 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "framework.h"
 #include "IntelliEdit.h"
 #include "ScintillaDocView.h"
+
 #include "MainFrame.h"
 #include "WebBrowserDlg.h"
 #include "CheckForUpdatesDlg.h"

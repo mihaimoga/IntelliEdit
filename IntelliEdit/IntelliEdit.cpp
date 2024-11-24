@@ -47,7 +47,6 @@ END_MESSAGE_MAP()
 
 CIntelliEditApp::CIntelliEditApp() noexcept : m_pInstanceChecker(_T("IntelliEdit"))
 {
-
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
 #ifdef _MANAGED
@@ -108,7 +107,7 @@ BOOL CIntelliEditApp::InitInstance()
 	// AfxInitRichEdit2() is required to use RichEdit control
 	AfxInitRichEdit2();
 
-	//Check for the previous instance as soon as possible
+	// Check for the previous instance as soon as possible
 	if (m_pInstanceChecker.PreviousInstanceRunning())
 	{
 		CCommandLineInfo cmdInfo;
