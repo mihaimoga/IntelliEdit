@@ -198,6 +198,7 @@
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Messages.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RenameDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScintillaCtrl.h" />
     <ClInclude Include="ScintillaDocView.h" />
@@ -221,6 +222,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RenameDlg.cpp" />
     <ClCompile Include="ScintillaCtrl.cpp" />
     <ClCompile Include="ScintillaDocView.cpp" />
     <ClCompile Include="sinstance.cpp" />

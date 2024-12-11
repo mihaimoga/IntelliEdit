@@ -25,7 +25,7 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #endif
 
 #include "IntelliEditDoc.h"
-
+#include "RenameDlg.h"
 #include <propkey.h>
 
 #ifdef _DEBUG
@@ -39,6 +39,16 @@ IMPLEMENT_DYNCREATE(CIntelliEditDoc, CScintillaDoc)
 BEGIN_MESSAGE_MAP(CIntelliEditDoc, CScintillaDoc)
 	ON_COMMAND(ID_FILE_SEND_MAIL, &CIntelliEditDoc::OnFileSendMail)
 	ON_UPDATE_COMMAND_UI(ID_FILE_SEND_MAIL, &CIntelliEditDoc::OnUpdateFileSendMail)
+	ON_COMMAND(ID_FILE_RENAME, &CIntelliEditDoc::OnFileRename)
+	ON_UPDATE_COMMAND_UI(ID_FILE_RENAME, &CIntelliEditDoc::OnUpdateFileRename)
+	ON_COMMAND(ID_FILE_MOVE, &CIntelliEditDoc::OnFileMove)
+	ON_UPDATE_COMMAND_UI(ID_FILE_MOVE, &CIntelliEditDoc::OnUpdateFileMove)
+	ON_COMMAND(ID_FILE_COPY, &CIntelliEditDoc::OnFileCopy)
+	ON_UPDATE_COMMAND_UI(ID_FILE_COPY, &CIntelliEditDoc::OnUpdateFileCopy)
+	ON_COMMAND(ID_FILE_DELETE, &CIntelliEditDoc::OnFileDelete)
+	ON_UPDATE_COMMAND_UI(ID_FILE_DELETE, &CIntelliEditDoc::OnUpdateFileDelete)
+	ON_COMMAND(ID_PROPERTIES, &CIntelliEditDoc::OnProperties)
+	ON_UPDATE_COMMAND_UI(ID_PROPERTIES, &CIntelliEditDoc::OnUpdateProperties)
 END_MESSAGE_MAP()
 
 // CIntelliEditDoc construction/destruction
@@ -147,3 +157,260 @@ void CIntelliEditDoc::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 // CIntelliEditDoc commands
+
+void CIntelliEditDoc::OnFileRename()
+{
+	// Get the name of the current file
+	CString sOriginalPath{ GetPathName() };
+	CString sDrive;
+	CString sDir;
+	CString sFname;
+	CString sExt;
+	_tsplitpath_s(sOriginalPath, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
+	sExt.ReleaseBuffer();
+	sFname.ReleaseBuffer();
+	sDir.ReleaseBuffer();
+	sDrive.ReleaseBuffer();
+	CString sPath;
+	_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, nullptr, nullptr, sFname, sExt);
+	sPath.ReleaseBuffer();
+
+	// Bring up the rename dialog
+	CRenameDlg dlg;
+	dlg.m_sFilename = sPath;
+	if (dlg.DoModal() == IDOK)
+	{
+		// Let the shell do the rename
+		SHFILEOPSTRUCT shfo{};
+		shfo.hwnd = AfxGetMainWnd()->GetSafeHwnd();
+		shfo.wFunc = FO_RENAME;
+		shfo.fFlags = FOF_ALLOWUNDO;
+		CString sFrom{ sOriginalPath };
+		const int nFromLength{ sFrom.GetLength() };
+#pragma warning(suppress: 26472)
+		std::vector<TCHAR> pszFrom{ static_cast<size_t>(nFromLength) + 2, std::allocator<TCHAR>{} };
+		_tcscpy_s(pszFrom.data(), pszFrom.size(), sFrom);
+#pragma warning(suppress: 26446)
+		pszFrom[static_cast<size_t>(nFromLength) + 1] = _T('\0');
+		shfo.pFrom = pszFrom.data();
+		_tsplitpath_s(dlg.m_sFilename, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
+		sExt.ReleaseBuffer();
+		sFname.ReleaseBuffer();
+		_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
+		sPath.ReleaseBuffer();
+		CString sTo{ sPath };
+		const int nToLength{ sTo.GetLength() };
+#pragma warning(suppress: 26472)
+		std::vector<TCHAR> pszTo{ static_cast<size_t>(nToLength) + 2, std::allocator<TCHAR>{} };
+		_tcscpy_s(pszTo.data(), pszTo.size(), sTo);
+#pragma warning(suppress: 26446)
+		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
+		shfo.pTo = pszTo.data();
+		const int nSuccess{ SHFileOperation(&shfo) };
+		if (nSuccess == 0)
+		{
+			// Set the document title to the new filename
+			SetPathName(sPath);
+		}
+	}
+}
+
+void CIntelliEditDoc::OnUpdateFileRename(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486 26489)
+	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
+}
+
+void CIntelliEditDoc::OnFileMove()
+{
+	// Get the name of the current file
+	CString sPath{ GetPathName() };
+
+	// Prompt the user for where they want to move the file to
+	CString sTitle;
+	if (!sTitle.LoadString(IDS_FOLDER_MOVE_TITLE))
+		return;
+	CString sDir;
+	if (theApp.GetShellManager()->BrowseForFolder(sDir, AfxGetMainWnd(), nullptr, sTitle, BIF_RETURNONLYFSDIRS, nullptr))
+	{
+		// Ensure the directory has a "\" at its end
+		const int nLen{ sDir.GetLength() };
+		if (sDir[nLen - 1] != _T('\\'))
+			sDir += _T("\\");
+
+		// Let the shell do the move
+		SHFILEOPSTRUCT shfo{};
+		shfo.hwnd = AfxGetMainWnd()->GetSafeHwnd();
+		shfo.wFunc = FO_MOVE;
+		shfo.fFlags = FOF_ALLOWUNDO;
+		CString sFrom{ sPath };
+		const int nFromLength{ sFrom.GetLength() };
+#pragma warning(suppress: 26472)
+		std::vector<TCHAR> pszFrom{ static_cast<size_t>(nFromLength) + 2, std::allocator<TCHAR>{} };
+		_tcscpy_s(pszFrom.data(), pszFrom.size(), sFrom);
+#pragma warning(suppress: 26446)
+		pszFrom[static_cast<size_t>(nFromLength) + 1] = _T('\0');
+		shfo.pFrom = pszFrom.data();
+		CString sDrive;
+		CString sFname;
+		CString sExt;
+		_tsplitpath_s(sDir, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, nullptr, 0, nullptr, 0);
+		sDir.ReleaseBuffer();
+		sDrive.ReleaseBuffer();
+		_tsplitpath_s(sPath, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
+		sExt.ReleaseBuffer();
+		sFname.ReleaseBuffer();
+		_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
+		CString sTo{ sPath };
+		const int nToLength{ sTo.GetLength() };
+#pragma warning(suppress: 26472)
+		std::vector<TCHAR> pszTo{ static_cast<size_t>(nToLength) + 2, std::allocator<TCHAR>{} };
+		_tcscpy_s(pszTo.data(), pszTo.size(), sTo);
+#pragma warning(suppress: 26446)
+		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
+		shfo.pTo = pszTo.data();
+		const int nSuccess{ SHFileOperation(&shfo) };
+		if (nSuccess == 0)
+		{
+			// Set the document title to the new filename
+			SetPathName(sPath);
+		}
+	}
+}
+
+void CIntelliEditDoc::OnUpdateFileMove(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486 26489)
+	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
+}
+
+void CIntelliEditDoc::OnFileCopy()
+{
+	// Get the name of the current file
+	CString sPath{ GetPathName() };
+
+	// Prompt the user for where they want to copy the file to
+	CString sTitle;
+	if (!sTitle.LoadString(IDS_FOLDER_COPY_TITLE))
+		return;
+	CString sDir;
+	if (theApp.GetShellManager()->BrowseForFolder(sDir, AfxGetMainWnd(), nullptr, sTitle, BIF_RETURNONLYFSDIRS, nullptr))
+	{
+		// Ensure the directory has a "\" at its end
+		const int nLen{ sDir.GetLength() };
+		if (sDir[nLen - 1] != _T('\\'))
+			sDir += _T("\\");
+
+		// Let the shell do the copy
+		SHFILEOPSTRUCT shfo{};
+		shfo.hwnd = AfxGetMainWnd()->GetSafeHwnd();
+		shfo.wFunc = FO_COPY;
+		shfo.fFlags = FOF_ALLOWUNDO;
+		CString sFrom{ sPath };
+		const int nFromLength{ sFrom.GetLength() };
+#pragma warning(suppress: 26472)
+		std::vector<TCHAR> pszFrom{ static_cast<size_t>(nFromLength) + 2, std::allocator<TCHAR>{} };
+		_tcscpy_s(pszFrom.data(), pszFrom.size(), sFrom);
+#pragma warning(suppress: 26446)
+		pszFrom[static_cast<size_t>(nFromLength) + 1] = _T('\0');
+		shfo.pFrom = pszFrom.data();
+		CString sDrive;
+		_tsplitpath_s(sDir, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, nullptr, 0, nullptr, 0);
+		sDir.ReleaseBuffer();
+		sDrive.ReleaseBuffer();
+		CString sFname;
+		CString sExt;
+		_tsplitpath_s(sPath, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
+		sExt.ReleaseBuffer();
+		sFname.ReleaseBuffer();
+		_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
+		sPath.ReleaseBuffer();
+		CString sTo{ sPath };
+		const int nToLength{ sTo.GetLength() };
+#pragma warning(suppress: 26472)
+		std::vector<TCHAR> pszTo{ static_cast<size_t>(nToLength) + 2, std::allocator<TCHAR>{} };
+		_tcscpy_s(pszTo.data(), pszTo.size(), sTo);
+#pragma warning(suppress: 26446)
+		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
+		shfo.pTo = pszTo.data();
+		const int nSuccess{ SHFileOperation(&shfo) };
+		if (nSuccess == 0)
+		{
+			// Set the document title to the new filename
+			SetPathName(sPath);
+		}
+	}
+}
+
+void CIntelliEditDoc::OnUpdateFileCopy(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486 26489)
+	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
+}
+
+void CIntelliEditDoc::OnFileDelete()
+{
+	// Create a Multi SZ string with the file to delete
+	CString sPath{ GetPathName() };
+#pragma warning(suppress: 26472)
+	const size_t nChars{ static_cast<size_t>(sPath.GetLength()) + 2 };
+
+	// Let the shell do the delete
+	SHFILEOPSTRUCT shfo{};
+	const CWnd* pMainWnd{ AfxGetMainWnd() };
+#pragma warning(suppress: 26496)
+	AFXASSUME(pMainWnd != nullptr);
+	shfo.hwnd = pMainWnd->GetSafeHwnd(); //NOLINT(clang-analyzer-core.CallAndMessage)
+	shfo.wFunc = FO_DELETE;
+
+	// Undo is not allowed if the SHIFT key is held down
+	if (!(GetKeyState(VK_SHIFT) & 0x8000))
+		shfo.fFlags = FOF_ALLOWUNDO;
+
+	// Should we display any UI
+	// if (!theApp.m_bAskMeOnDelete)
+		shfo.fFlags |= FOF_NOCONFIRMATION;
+
+	std::vector<TCHAR> pszFrom{ nChars, std::allocator<TCHAR>{} };
+	_tcscpy_s(pszFrom.data(), pszFrom.size(), sPath);
+#pragma warning(suppress: 26446)
+	pszFrom[nChars - 1] = _T('\0');
+	shfo.pFrom = pszFrom.data();
+
+	// Let the shell perform the actual deletion
+	const int nSuccess{ SHFileOperation(&shfo) };
+	if (nSuccess == 0)
+	{
+		// Since we have deleted the current file
+		// move onto the next file in the directory
+		GetView()->SendMessage(WM_COMMAND, ID_FILE_CLOSE, 0L);
+	}
+}
+
+void CIntelliEditDoc::OnUpdateFileDelete(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486 26489)
+	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
+}
+
+void CIntelliEditDoc::OnProperties()
+{
+	CString sPathName{ GetPathName() };
+	SHELLEXECUTEINFO sei;
+	memset(&sei, 0, sizeof(sei));
+	sei.cbSize = sizeof(sei);
+	sei.hwnd = AfxGetMainWnd()->GetSafeHwnd();
+	sei.nShow = SW_SHOW;
+	sei.lpFile = sPathName.GetBuffer(sPathName.GetLength());
+	sei.lpVerb = _T("properties");
+	sei.fMask = SEE_MASK_INVOKEIDLIST;
+#pragma warning(suppress: 26486)
+	ShellExecuteEx(&sei);
+	sPathName.ReleaseBuffer();
+}
+
+void CIntelliEditDoc::OnUpdateProperties(CCmdUI* pCmdUI)
+{
+#pragma warning(suppress: 26486 26489)
+	pCmdUI->Enable(!GetPathName().IsEmpty());
+}
