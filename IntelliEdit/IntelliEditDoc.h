@@ -53,6 +53,17 @@ protected:
 
 // Generated message map functions
 protected:
+public:
+	afx_msg void OnFileRename();
+	afx_msg void OnUpdateFileRename(CCmdUI* pCmdUI);
+	afx_msg void OnFileMove();
+	afx_msg void OnUpdateFileMove(CCmdUI* pCmdUI);
+	afx_msg void OnFileCopy();
+	afx_msg void OnUpdateFileCopy(CCmdUI* pCmdUI);
+	afx_msg void OnFileDelete();
+	afx_msg void OnUpdateFileDelete(CCmdUI* pCmdUI);
+	afx_msg void OnProperties();
+	afx_msg void OnUpdateProperties(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 
 #ifdef SHARED_HANDLERS

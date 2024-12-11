@@ -5,7 +5,9 @@
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define IDD_SCINTILLA_FINDDLGORD        101
+#define IDS_FOLDER_COPY_TITLE           101
 #define IDD_SCINTILLA_REPLACEDLGORD     102
+#define IDS_FOLDER_MOVE_TITLE           102
 #define IDP_SOCKETS_INIT_FAILED         104
 #define IDB_WRITESMALL                  110
 #define IDB_WRITELARGE                  111
@@ -35,6 +37,7 @@
 #define IDC_CONTRIBUTORS                141
 #define IDR_PASTE_MENU                  151
 #define IDR_WINDOWS_MENU                152
+#define IDD_RENAME                      153
 #define IDS_EDIT_MENU                   306
 #define IDR_RIBBON                      307
 #define PNG_WRITELARGE                  310
@@ -44,6 +47,7 @@
 #define IDC_CUSTOM_CONTROL              1000
 #define IDC_STATUS                      1001
 #define IDC_PROGRESS                    1002
+#define IDC_FILENAME                    1003
 #define IDC_REGULAR_EXPRESSION          2000
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_LANGUAGE_VBSCRIPT            32771
@@ -63,6 +67,11 @@
 #define IDC_WIKI                        32791
 #define IDC_USER_MANUAL                 32794
 #define IDC_CHECK_FOR_UPDATES           32795
+#define ID_FILE_RENAME                  32796
+#define ID_FILE_MOVE                    32797
+#define ID_FILE_COPY                    32798
+#define ID_FILE_DELETE                  32799
+#define ID_PROPERTIES                   32800
 #define ID_INDICATOR_LINE               61446
 #define IDS_LINE_INDICATOR              61447
 #define ID_INDICATOR_STYLE              61448
@@ -75,8 +84,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
-#define _APS_NEXT_COMMAND_VALUE         32796
-#define _APS_NEXT_CONTROL_VALUE         1003
+#define _APS_NEXT_COMMAND_VALUE         32801
+#define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif
