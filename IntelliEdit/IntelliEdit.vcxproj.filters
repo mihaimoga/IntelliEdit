@@ -178,6 +178,12 @@
     <Image Include="res\writesmall.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\filelarge.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\filesmall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />

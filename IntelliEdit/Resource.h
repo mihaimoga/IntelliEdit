@@ -44,6 +44,8 @@
 #define PNG_WRITESMALL                  311
 #define IDD_WebBrowserDlg               312
 #define IDD_CheckForUpdatesDlg          313
+#define PNG_FILELARGE                   314
+#define PNG_FILESMALL                   315
 #define IDC_CUSTOM_CONTROL              1000
 #define IDC_STATUS                      1001
 #define IDC_PROGRESS                    1002
@@ -83,7 +85,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32801
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           314
