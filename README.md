@@ -41,9 +41,14 @@ The **main button** contains many of the normal file-operation actions found in 
 If the document does not currently have a file associated with it, this action will be grayed out and the menu entry cannot be used. Use **Save As** instead.
 - **Save As**: Saves the current document to the filesystem, prompting for the new filename to use. 
 If the document had previously been saved to a file, this will create as new copy of the file, and _IntelliEdit_ will continue working with the document associated with the new file, leaving the old file with the contents that were last saved.
-- **Close**: Closes the active document, prompting to save if it has been modified since it was opened or created.
 - The **Print** action will pull up a Windows-standard print dialog, from which you can choose your printer and send your text to the selected printer. 
 Normally, it will print the whole document, but you can use the print dialog to choose only certain pages; if you have an active selection in the editor, only the selected text will be printed.
+- **Rename File**: Renames the active document.
+- **Move File**: Moves the active document.
+- **Copy File**: Copies the active document.
+- **Delete File**: Deletes the active document.
+- **Properties**: Shows properties for the active document.
+- **Close**: Closes the active document, prompting to save if it has been modified since it was opened or created.
 - **Exit**: Closes the _IntelliEdit_ application.
 
 The **Clipboard** menu features typical editing commands which any Windows user should be familiar with:
