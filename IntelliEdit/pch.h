@@ -38,13 +38,13 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include <memory>
 #include <array>
 #include <vector>
-#include <string_view>
-
 #include <string>
+#include <string_view>
+#include <filesystem>
+
 #include <sstream>
 #include <iomanip>
 #include <atlsync.h>
-#include <vector>
 #include <map>
 #include <codecvt>
 #include <iostream>

@@ -44,7 +44,8 @@ public:
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-	HMODULE LoadLibraryFromApplicationDirectory(LPCTSTR lpFileName);
+	[[nodiscard]] CString GetModuleFileName(_Inout_opt_ DWORD* pdwLastError = nullptr);
+	[[nodiscard]] HMODULE LoadLibraryFromApplicationDirectory(_In_z_ LPCTSTR lpFileName);
 
 // Implementation
 	virtual void PreLoadState();
