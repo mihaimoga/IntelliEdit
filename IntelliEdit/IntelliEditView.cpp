@@ -405,6 +405,9 @@ void CIntelliEditView::OnInitialUpdate()
 	// Show line numbers
 	rCtrl.SetMarginWidthN(0, 32);
 
+	// Set word wrap
+	rCtrl.SetWrapMode(Scintilla::Wrap::Word);
+
 #ifdef _DEBUG
 	AfxDump(this);
 #endif
