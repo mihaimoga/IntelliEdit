@@ -26,7 +26,6 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #include "framework.h"
 
 #define VC_EXTRALEAN
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
 #define _AFX_ALL_WARNINGS
 
 #ifndef _SECURE_ATL
