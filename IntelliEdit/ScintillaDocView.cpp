@@ -1688,7 +1688,7 @@ void CScintillaView::OnFilePageSetup()
 	if (m_bPersistMarginSettings)
 		LoadMarginSettings();
 
-	//Set the current margin settings to the current value from m_rectMargin 
+	//Set the current margin settings to the current value from m_rMargin
 	dlg.m_psd.rtMargin = m_rMargin;
 
 	//get the current device from the app
