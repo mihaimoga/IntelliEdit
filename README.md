@@ -3,8 +3,6 @@
 Download:
 - [IntelliEditSetup.msi](https://www.moga.doctor/freeware/IntelliEditSetup.msi)
 - [IntelliEdit.zip](https://www.moga.doctor/freeware/IntelliEdit.zip)
-- [Release Notes](https://www.moga.doctor/freeware/ReleaseNotes.html)
-- [Software Content Register](https://www.moga.doctor/freeware/SoftwareContextRegister.html)
 
 ## Introduction
 
