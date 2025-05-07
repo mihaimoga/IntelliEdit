@@ -162,18 +162,8 @@ void CIntelliEditDoc::OnFileRename()
 {
 	// Get the name of the current file
 	CString sOriginalPath{ GetPathName() };
-	CString sDrive;
-	CString sDir;
-	CString sFname;
-	CString sExt;
-	_tsplitpath_s(sOriginalPath, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
-	sExt.ReleaseBuffer();
-	sFname.ReleaseBuffer();
-	sDir.ReleaseBuffer();
-	sDrive.ReleaseBuffer();
-	CString sPath;
-	_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, nullptr, nullptr, sFname, sExt);
-	sPath.ReleaseBuffer();
+	std::filesystem::path path(sOriginalPath.GetString());
+	CString sPath{ path.filename().c_str() };
 
 	// Bring up the rename dialog
 	CRenameDlg dlg;
@@ -190,20 +180,16 @@ void CIntelliEditDoc::OnFileRename()
 #pragma warning(suppress: 26472)
 		std::vector<TCHAR> pszFrom{ static_cast<size_t>(nFromLength) + 2, std::allocator<TCHAR>{} };
 		_tcscpy_s(pszFrom.data(), pszFrom.size(), sFrom);
-#pragma warning(suppress: 26446)
+#pragma warning(suppress: 26446 26472)
 		pszFrom[static_cast<size_t>(nFromLength) + 1] = _T('\0');
 		shfo.pFrom = pszFrom.data();
-		_tsplitpath_s(dlg.m_sFilename, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
-		sExt.ReleaseBuffer();
-		sFname.ReleaseBuffer();
-		_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
-		sPath.ReleaseBuffer();
-		CString sTo{ sPath };
+		path.replace_filename(dlg.m_sFilename.GetString());
+		CString sTo{ path.c_str() };
 		const int nToLength{ sTo.GetLength() };
 #pragma warning(suppress: 26472)
 		std::vector<TCHAR> pszTo{ static_cast<size_t>(nToLength) + 2, std::allocator<TCHAR>{} };
 		_tcscpy_s(pszTo.data(), pszTo.size(), sTo);
-#pragma warning(suppress: 26446)
+#pragma warning(suppress: 26446 26472)
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
 		const int nSuccess{ SHFileOperation(&shfo) };
@@ -248,25 +234,18 @@ void CIntelliEditDoc::OnFileMove()
 #pragma warning(suppress: 26472)
 		std::vector<TCHAR> pszFrom{ static_cast<size_t>(nFromLength) + 2, std::allocator<TCHAR>{} };
 		_tcscpy_s(pszFrom.data(), pszFrom.size(), sFrom);
-#pragma warning(suppress: 26446)
+#pragma warning(suppress: 26446 26472)
 		pszFrom[static_cast<size_t>(nFromLength) + 1] = _T('\0');
 		shfo.pFrom = pszFrom.data();
-		CString sDrive;
-		CString sFname;
-		CString sExt;
-		_tsplitpath_s(sDir, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, nullptr, 0, nullptr, 0);
-		sDir.ReleaseBuffer();
-		sDrive.ReleaseBuffer();
-		_tsplitpath_s(sPath, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
-		sExt.ReleaseBuffer();
-		sFname.ReleaseBuffer();
-		_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
-		CString sTo{ sPath };
+		std::filesystem::path path1{ sDir.GetString() };
+		std::filesystem::path path2{ sPath.GetString() };
+		path1.replace_filename(path2.filename());
+		CString sTo{ path1.c_str() };
 		const int nToLength{ sTo.GetLength() };
 #pragma warning(suppress: 26472)
 		std::vector<TCHAR> pszTo{ static_cast<size_t>(nToLength) + 2, std::allocator<TCHAR>{} };
 		_tcscpy_s(pszTo.data(), pszTo.size(), sTo);
-#pragma warning(suppress: 26446)
+#pragma warning(suppress: 26446 26472)
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
 		const int nSuccess{ SHFileOperation(&shfo) };
@@ -311,26 +290,18 @@ void CIntelliEditDoc::OnFileCopy()
 #pragma warning(suppress: 26472)
 		std::vector<TCHAR> pszFrom{ static_cast<size_t>(nFromLength) + 2, std::allocator<TCHAR>{} };
 		_tcscpy_s(pszFrom.data(), pszFrom.size(), sFrom);
-#pragma warning(suppress: 26446)
+#pragma warning(suppress: 26446 26472)
 		pszFrom[static_cast<size_t>(nFromLength) + 1] = _T('\0');
 		shfo.pFrom = pszFrom.data();
-		CString sDrive;
-		_tsplitpath_s(sDir, sDrive.GetBuffer(_MAX_DRIVE), _MAX_DRIVE, sDir.GetBuffer(_MAX_DIR), _MAX_DIR, nullptr, 0, nullptr, 0);
-		sDir.ReleaseBuffer();
-		sDrive.ReleaseBuffer();
-		CString sFname;
-		CString sExt;
-		_tsplitpath_s(sPath, nullptr, 0, nullptr, 0, sFname.GetBuffer(_MAX_FNAME), _MAX_FNAME, sExt.GetBuffer(_MAX_EXT), _MAX_EXT);
-		sExt.ReleaseBuffer();
-		sFname.ReleaseBuffer();
-		_tmakepath_s(sPath.GetBuffer(_MAX_PATH), _MAX_PATH, sDrive, sDir, sFname, sExt);
-		sPath.ReleaseBuffer();
-		CString sTo{ sPath };
+		std::filesystem::path path1{ sDir.GetString() };
+		std::filesystem::path path2{ sPath.GetString() };
+		path1.replace_filename(path2.filename());
+		CString sTo{ path1.c_str() };
 		const int nToLength{ sTo.GetLength() };
 #pragma warning(suppress: 26472)
 		std::vector<TCHAR> pszTo{ static_cast<size_t>(nToLength) + 2, std::allocator<TCHAR>{} };
 		_tcscpy_s(pszTo.data(), pszTo.size(), sTo);
-#pragma warning(suppress: 26446)
+#pragma warning(suppress: 26446 26472)
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
 		const int nSuccess{ SHFileOperation(&shfo) };

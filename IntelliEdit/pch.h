@@ -34,22 +34,13 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 
 #include <afxwin.h>
 #include <afxext.h>
+#include <atlsync.h>
+#include <string>
+#include <vector>
+#include <algorithm>
 #include <memory>
 #include <array>
-#include <vector>
-#include <string>
-#include <string_view>
 #include <filesystem>
-
-#include <sstream>
-#include <iomanip>
-#include <atlsync.h>
-#include <map>
-#include <codecvt>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
 
 #include <afxsock.h>            // MFC socket extensions
 
