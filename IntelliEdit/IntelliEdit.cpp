@@ -259,7 +259,7 @@ CString CIntelliEditApp::GetModuleFileName(_Inout_opt_ DWORD* pdwLastError)
 	}
 }
 
-HMODULE CIntelliEditApp::LoadLibraryFromApplicationDirectory(LPCTSTR lpFileName)
+HMODULE CIntelliEditApp::LoadLibraryFromApplicationDirectory(_In_z_ LPCTSTR lpFileName)
 {
 	// Get the Application directory
 	CString sFullPath{ GetModuleFileName() };
