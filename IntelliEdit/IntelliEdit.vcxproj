@@ -251,7 +251,7 @@
     <None Include="ReleaseNotes.html" />
     <None Include="res\IntelliEdit.rc2" />
     <None Include="res\ribbon.mfcribbon-ms" />
-    <None Include="SoftwareContextRegister.html" />
+    <None Include="SoftwareContentRegister.html" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IntelliEdit.rc" />
