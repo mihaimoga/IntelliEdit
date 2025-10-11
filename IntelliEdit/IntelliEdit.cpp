@@ -199,7 +199,7 @@ BOOL CIntelliEditApp::InitInstance()
 	// The main window has been initialized, so show and update it
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
-	// pMainFrame->MoveWindow(CRect(0, 0, 814, 607));
+	// pMainFrame->MoveWindow(CRect(0, 0, 1214, 907));
 	// pMainFrame->CenterWindow();
 
 	// If this is the first instance of our App then track it so any other instances can find us
