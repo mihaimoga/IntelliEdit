@@ -192,12 +192,30 @@ void CIntelliEditDoc::OnFileRename()
 #pragma warning(suppress: 26446 26472)
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
+
+		// Let the shell perform the actual deletion
 		const int nSuccess{ SHFileOperation(&shfo) };
 		if (nSuccess == 0)
 		{
-			// Set the document title to the new filename
-			SetPathName(sPath);
+			// Open the newly renamed file
+			CDocTemplate* pTemplate{ GetDocTemplate() };
+#pragma warning(suppress: 26496)
+			AFXASSUME(pTemplate != nullptr);
+			if (pTemplate->OpenDocumentFile(sTo, FALSE, TRUE) == nullptr)
+				pTemplate->OpenDocumentFile(nullptr, FALSE, TRUE);
+			// Since we have deleted the current file
+			// move onto the next file in the directory
+			GetView()->SendMessage(WM_COMMAND, ID_FILE_CLOSE, 0L);
 		}
+		/* else
+		{
+			// Reset this document to the current image before the failed rename above
+			CDocTemplate* pTemplate{ GetDocTemplate() };
+#pragma warning(suppress: 26496)
+			AFXASSUME(pTemplate != nullptr);
+			if (pTemplate->OpenDocumentFile(sPath, FALSE, TRUE) == nullptr)
+				pTemplate->OpenDocumentFile(nullptr, FALSE, TRUE);
+		} */
 	}
 }
 
@@ -248,12 +266,30 @@ void CIntelliEditDoc::OnFileMove()
 #pragma warning(suppress: 26446 26472)
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
+
+		// Let the shell perform the actual deletion
 		const int nSuccess{ SHFileOperation(&shfo) };
 		if (nSuccess == 0)
 		{
-			// Set the document title to the new filename
-			SetPathName(sPath);
+			// Open the newly renamed file
+			CDocTemplate* pTemplate{ GetDocTemplate() };
+#pragma warning(suppress: 26496)
+			AFXASSUME(pTemplate != nullptr);
+			if (pTemplate->OpenDocumentFile(sTo, FALSE, TRUE) == nullptr)
+				pTemplate->OpenDocumentFile(nullptr, FALSE, TRUE);
+			// Since we have deleted the current file
+			// move onto the next file in the directory
+			GetView()->SendMessage(WM_COMMAND, ID_FILE_CLOSE, 0L);
 		}
+		/* else
+		{
+			// Reset this document to the current image before the failed rename above
+			CDocTemplate* pTemplate{ GetDocTemplate() };
+#pragma warning(suppress: 26496)
+			AFXASSUME(pTemplate != nullptr);
+			if (pTemplate->OpenDocumentFile(sPath, FALSE, TRUE) == nullptr)
+				pTemplate->OpenDocumentFile(nullptr, FALSE, TRUE);
+		} */
 	}
 }
 
@@ -304,12 +340,9 @@ void CIntelliEditDoc::OnFileCopy()
 #pragma warning(suppress: 26446 26472)
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
-		const int nSuccess{ SHFileOperation(&shfo) };
-		if (nSuccess == 0)
-		{
-			// Set the document title to the new filename
-			SetPathName(sPath);
-		}
+
+		// Let the shell perform the actual deletion
+		SHFileOperation(&shfo);
 	}
 }
 
@@ -340,7 +373,7 @@ void CIntelliEditDoc::OnFileDelete()
 
 	// Should we display any UI
 	// if (!theApp.m_bAskMeOnDelete)
-		shfo.fFlags |= FOF_NOCONFIRMATION;
+	shfo.fFlags |= FOF_NOCONFIRMATION;
 
 	std::vector<TCHAR> pszFrom{ nChars, std::allocator<TCHAR>{} };
 	_tcscpy_s(pszFrom.data(), pszFrom.size(), sPath);
