@@ -341,8 +341,13 @@ void CIntelliEditDoc::OnFileCopy()
 		pszTo[static_cast<size_t>(nToLength) + 1] = _T('\0');
 		shfo.pTo = pszTo.data();
 
-		// Let the shell perform the actual deletion
-		SHFileOperation(&shfo);
+		// Let the shell perform the actual copy
+		const int nSuccess{ SHFileOperation(&shfo) };
+		if (nSuccess == 0)
+		{
+			// Set the document title to the new filename
+			SetPathName(sTo);
+		}
 	}
 }
 
