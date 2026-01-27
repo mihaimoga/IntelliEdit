@@ -133,8 +133,8 @@
     <None Include="..\CODE_OF_CONDUCT.md" />
     <None Include="..\CONTRIBUTING.md" />
     <None Include="..\README.md" />
-    <None Include="packages.config" />
     <None Include="SoftwareContentRegister.html" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IntelliEdit.rc">
