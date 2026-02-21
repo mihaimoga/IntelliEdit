@@ -31,6 +31,13 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
+/**
+ * @brief CMake language keywords for syntax highlighting.
+ *
+ * Contains all CMake commands including scripting commands, project commands,
+ * and CTest commands. Used by the CMake lexer for keyword highlighting.
+ * @see https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html
+ */
 const TCHAR* g_cmakeKeywords
 {
 	/* https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html */
@@ -59,6 +66,13 @@ const TCHAR* g_cmakeKeywords
 	_T("ctest_sleep ctest_start ctest_submit ctest_test ctest_update ctest_upload")
 };
 
+/**
+ * @brief C++ language keywords for syntax highlighting.
+ *
+ * Contains standard C++ keywords including control structures, data types,
+ * and operators. Used by the C++ lexer for keyword highlighting.
+ * @see https://www.w3schools.com/cpp/cpp_ref_keywords.asp
+ */
 const TCHAR* g_cppKeywords
 {
 	/* _T("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break ")
@@ -78,6 +92,12 @@ const TCHAR* g_cppKeywords
 	_T("try typedef unsigned using virtual void while xor xor_eq")
 };
 
+/**
+ * @brief C# language keywords for syntax highlighting.
+ *
+ * Contains C# keywords including type definitions, modifiers, and control
+ * structures. Used by the C# lexer for keyword highlighting.
+ */
 const TCHAR* g_csKeywords
 {
 	_T("abstract as base bool break byte case catch char checked class const ")
@@ -90,6 +110,13 @@ const TCHAR* g_csKeywords
 	_T("volatile while")
 };
 
+/**
+ * @brief Groovy language keywords for syntax highlighting.
+ *
+ * Contains Groovy keywords for the Apache Groovy programming language.
+ * Used by the Groovy lexer for keyword highlighting.
+ * @see https://docs.oracle.com/cloud/latest/big-data-discovery-cloud/BDDDE/rsu_transform_unsupported_features.htm
+ */
 const TCHAR* g_groovyKeywords
 {
 	/* https://docs.oracle.com/cloud/latest/big-data-discovery-cloud/BDDDE/rsu_transform_unsupported_features.htm */
@@ -101,6 +128,13 @@ const TCHAR* g_groovyKeywords
 	_T("transient true try void volatile while")
 };
 
+/**
+ * @brief Java language keywords for syntax highlighting.
+ *
+ * Contains Java keywords including all standard Java language keywords
+ * and modifiers. Used by the Java lexer for keyword highlighting.
+ * @see https://www.w3schools.com/java/java_ref_keywords.asp
+ */
 const TCHAR* g_javaKeywords
 {
 	/* https://www.w3schools.com/java/java_ref_keywords.asp */
@@ -112,6 +146,13 @@ const TCHAR* g_javaKeywords
 	_T("volatile while")
 };
 
+/**
+ * @brief JavaScript language keywords for syntax highlighting.
+ *
+ * Contains JavaScript/ECMAScript keywords including ES6+ features.
+ * Used by the JavaScript lexer for keyword highlighting.
+ * @see https://www.w3schools.com/js/js_reserved.asp
+ */
 const TCHAR* g_jsKeywords
 {
 	/* https://www.w3schools.com/js/js_reserved.asp */
@@ -123,12 +164,25 @@ const TCHAR* g_jsKeywords
 	_T("throws transient true try typeof var void volatile while with yield")
 };
 
+/**
+ * @brief MATLAB language keywords for syntax highlighting.
+ *
+ * Contains MATLAB keywords for control flow and function definitions.
+ * Used by the MATLAB lexer for keyword highlighting.
+ */
 const TCHAR* g_matlabKeywords
 {
 	_T("break case catch classdef continue else elseif end for function global ")
 	_T("if otherwise parfor persistent return spmd switch try while")
 };
 
+/**
+ * @brief Python language keywords for syntax highlighting.
+ *
+ * Contains Python keywords including all standard Python 3 keywords.
+ * Used by the Python lexer for keyword highlighting.
+ * @see https://www.w3schools.com/python/python_ref_keywords.asp
+ */
 const TCHAR* g_pyKeywords
 {
 	/* https://www.w3schools.com/python/python_ref_keywords.asp */
@@ -137,12 +191,25 @@ const TCHAR* g_pyKeywords
 	_T("return True try while with yield")
 };
 
+/**
+ * @brief R language keywords for syntax highlighting.
+ *
+ * Contains R statistical computing language keywords and special constants.
+ * Used by the R lexer for keyword highlighting.
+ */
 const TCHAR* g_rKeywords
 {
 	_T("if else repeat while function for next break TRUE FALSE NULL Inf NaN NA ")
 	_T("NA_integer_ NA_real_ NA_complex_ NA_character_")
 };
 
+/**
+ * @brief Rust language keywords for syntax highlighting.
+ *
+ * Contains Rust keywords including strict and reserved keywords.
+ * Used by the Rust lexer for keyword highlighting.
+ * @see https://doc.rust-lang.org/reference/keywords.html
+ */
 const TCHAR* g_rsKeywords
 {
 	/* https://doc.rust-lang.org/reference/keywords.html */
@@ -153,6 +220,14 @@ const TCHAR* g_rsKeywords
 	_T("union dyn")
 };
 
+/**
+ * @brief SQL language keywords for syntax highlighting.
+ *
+ * Contains SQL keywords including standard SQL commands, MySQL data types,
+ * string functions, numeric functions, date functions, and advanced functions.
+ * Used by the SQL lexer for keyword highlighting.
+ * @see https://www.w3schools.com/sql/sql_ref_keywords.asp
+ */
 const TCHAR* g_sqlKeywords
 {
 	/* https://www.w3schools.com/sql/sql_ref_keywords.asp */
@@ -187,6 +262,13 @@ const TCHAR* g_sqlKeywords
 	_T("isnull last_insert_id nullif session_user system_user user version")
 };
 
+/**
+ * @brief TCL/TK language keywords for syntax highlighting.
+ *
+ * Contains TCL scripting language keywords including Tcl commands and
+ * Tk widget commands. Used by the TCL lexer for keyword highlighting.
+ * @see https://www.tcl-lang.org/man/tcl8.5/UserCmd/contents.htm
+ */
 const TCHAR* g_tclKeywords
 {
 	/* https://www.tcl-lang.org/man/tcl8.5/UserCmd/contents.htm */
@@ -221,6 +303,16 @@ const TCHAR* g_tclKeywords
 	_T("ttk::style ttk::treeview ttk::widget ttk_image ttk_vsapi winfo wm ")
 };
 
+/**
+ * @class CIntelliEditView
+ * @brief View class for IntelliEdit text editor.
+ *
+ * This class provides the main text editing view using the Scintilla editor
+ * control. It handles syntax highlighting for multiple programming languages,
+ * manages editor margins, markers, folding, and provides auto-completion
+ * and call tip functionality.
+ */
+
 // CIntelliEditView
 
 IMPLEMENT_DYNCREATE(CIntelliEditView, CScintillaView)
@@ -252,9 +344,15 @@ BEGIN_MESSAGE_MAP(CIntelliEditView, CScintillaView)
 	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
+/**
+ * @brief Default constructor for CIntelliEditView.
+ *
+ * Initializes all lexer pointers to nullptr and sets initial state for
+ * lexer keywords flag. Loads margin settings from configuration.
+ */
 // CIntelliEditView construction/destruction
 
-CIntelliEditView::CIntelliEditView() noexcept : 
+CIntelliEditView::CIntelliEditView() noexcept :
 	m_batLexer { nullptr },
 	m_cmakeLexer { nullptr },
 	m_cppLexer { nullptr },
@@ -276,10 +374,23 @@ CIntelliEditView::CIntelliEditView() noexcept :
 	LoadMarginSettings();
 }
 
+/**
+ * @brief Destructor for CIntelliEditView.
+ *
+ * Cleans up resources used by the view.
+ */
 CIntelliEditView::~CIntelliEditView()
 {
 }
 
+/**
+ * @brief Called before window creation.
+ *
+ * Allows modification of window class or styles before the window is created.
+ *
+ * @param cs Reference to the CREATESTRUCT containing window creation parameters.
+ * @return TRUE if the window should be created; FALSE otherwise.
+ */
 BOOL CIntelliEditView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
@@ -288,6 +399,14 @@ BOOL CIntelliEditView::PreCreateWindow(CREATESTRUCT& cs)
 	return CView::PreCreateWindow(cs);
 }
 
+/**
+ * @brief Draws the view.
+ *
+ * Called by the framework to render the view. The actual rendering is
+ * handled by the Scintilla control.
+ *
+ * @param pDC Pointer to the device context (unused for Scintilla control).
+ */
 // CIntelliEditView drawing
 
 void CIntelliEditView::OnDraw(CDC* /*pDC*/)
@@ -300,6 +419,18 @@ void CIntelliEditView::OnDraw(CDC* /*pDC*/)
 	// TODO: add draw code for native data here
 }
 
+/**
+ * @brief Sets a style for the Scintilla editor.
+ *
+ * Configures foreground color, background color, font size, and font face
+ * for a specific style identifier.
+ *
+ * @param style The style identifier to configure.
+ * @param fore Foreground (text) color as a COLORREF.
+ * @param back Background color as a COLORREF (default: white).
+ * @param size Font size in points (default: -1 to keep current).
+ * @param face Font face name (default: nullptr to keep current).
+ */
 void CIntelliEditView::SetAStyle(int style, COLORREF fore, COLORREF back, int size, const char* face)
 {
 	auto& rCtrl{ GetCtrl() };
@@ -312,6 +443,16 @@ void CIntelliEditView::SetAStyle(int style, COLORREF fore, COLORREF back, int si
 		rCtrl.StyleSetFont(style, face);
 }
 
+/**
+ * @brief Defines a marker symbol with colors.
+ *
+ * Configures a margin marker with a specific symbol type and colors.
+ *
+ * @param marker The marker number to define.
+ * @param markerType The symbol type for the marker.
+ * @param fore Foreground color for the marker.
+ * @param back Background color for the marker.
+ */
 void CIntelliEditView::DefineMarker(int marker, Scintilla::MarkerSymbol markerType, COLORREF fore, COLORREF back)
 {
 	auto& rCtrl{ GetCtrl() };
@@ -321,6 +462,13 @@ void CIntelliEditView::DefineMarker(int marker, Scintilla::MarkerSymbol markerTy
 	rCtrl.MarkerSetBack(marker, back);
 }
 
+/**
+ * @brief Initializes the view after creation.
+ *
+ * Sets up the Scintilla editor with default styles, colors, margins,
+ * folding configuration, markers, auto-completion, and call tips.
+ * Configures syntax highlighting styles for C/C++ and TCL languages.
+ */
 void CIntelliEditView::OnInitialUpdate()
 {
 	// Let the base class do its thing
@@ -413,6 +561,11 @@ void CIntelliEditView::OnInitialUpdate()
 #endif
 }
 
+/**
+ * @brief Handles print preview command.
+ *
+ * Displays the print preview window for the current document.
+ */
 // CIntelliEditView printing
 
 void CIntelliEditView::OnFilePrintPreview()
@@ -422,12 +575,28 @@ void CIntelliEditView::OnFilePrintPreview()
 #endif
 }
 
+/**
+ * @brief Handles right mouse button up event.
+ *
+ * Converts the point to screen coordinates and displays the context menu.
+ *
+ * @param nFlags Mouse event flags (unused).
+ * @param point The point where the right button was released.
+ */
 void CIntelliEditView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
 }
 
+/**
+ * @brief Displays the context menu.
+ *
+ * Shows the popup edit menu at the specified screen coordinates.
+ *
+ * @param pWnd Pointer to the window that owns the menu (unused).
+ * @param point The screen coordinates where the menu should appear.
+ */
 void CIntelliEditView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
 #ifndef SHARED_HANDLERS
@@ -435,6 +604,11 @@ void CIntelliEditView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 #endif
 }
 
+/**
+ * @brief Validates the view object in debug builds.
+ *
+ * Performs assertion checks to verify the view object is in a valid state.
+ */
 // CIntelliEditView diagnostics
 
 #ifdef _DEBUG
@@ -443,11 +617,25 @@ void CIntelliEditView::AssertValid() const
 	CView::AssertValid();
 }
 
+/**
+ * @brief Dumps the view object state for debugging.
+ *
+ * Outputs diagnostic information about the view object.
+ *
+ * @param dc Reference to the dump context to write to.
+ */
 void CIntelliEditView::Dump(CDumpContext& dc) const
 {
 	CView::Dump(dc);
 }
 
+/**
+ * @brief Gets the document associated with this view.
+ *
+ * Returns a pointer to the CIntelliEditDoc document object.
+ *
+ * @return Pointer to the associated document.
+ */
 CIntelliEditDoc* CIntelliEditView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CIntelliEditDoc)));
@@ -455,6 +643,11 @@ CIntelliEditDoc* CIntelliEditView::GetDocument() const // non-debug version is i
 }
 #endif //_DEBUG
 
+/**
+ * @brief Adds a marker to the current line.
+ *
+ * Places a marker (bookmark) on the line where the cursor is located.
+ */
 // CIntelliEditView message handlers
 
 void CIntelliEditView::OnOptionsAddmarker()
@@ -465,6 +658,13 @@ void CIntelliEditView::OnOptionsAddmarker()
 	rCtrl.MarkerAdd(nLine, 0);
 }
 
+/**
+ * @brief Updates the UI state for the Add Marker command.
+ *
+ * Enables the command only if the current line doesn't already have a marker.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateOptionsAddmarker(CCmdUI* pCmdUI)
 {
@@ -476,6 +676,11 @@ void CIntelliEditView::OnUpdateOptionsAddmarker(CCmdUI* pCmdUI)
 	pCmdUI->Enable((nBits & 0x1) == 0);
 }
 
+/**
+ * @brief Deletes a marker from the current line.
+ *
+ * Removes the marker (bookmark) from the line where the cursor is located.
+ */
 void CIntelliEditView::OnOptionsDeletemarker()
 {
 	auto& rCtrl{ GetCtrl() };
@@ -484,6 +689,13 @@ void CIntelliEditView::OnOptionsDeletemarker()
 	rCtrl.MarkerDelete(nLine, 0);
 }
 
+/**
+ * @brief Updates the UI state for the Delete Marker command.
+ *
+ * Enables the command only if the current line has a marker.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateOptionsDeletemarker(CCmdUI* pCmdUI)
 {
@@ -495,6 +707,12 @@ void CIntelliEditView::OnUpdateOptionsDeletemarker(CCmdUI* pCmdUI)
 	pCmdUI->Enable(nBits & 0x1);
 }
 
+/**
+ * @brief Finds and navigates to the next marker.
+ *
+ * Searches forward from the current line for the next marker and
+ * moves the cursor to that line. Beeps if no marker is found.
+ */
 void CIntelliEditView::OnOptionsFindNextmarker()
 {
 	auto& rCtrl{ GetCtrl() };
@@ -507,6 +725,12 @@ void CIntelliEditView::OnOptionsFindNextmarker()
 		MessageBeep(MB_ICONHAND);
 }
 
+/**
+ * @brief Finds and navigates to the previous marker.
+ *
+ * Searches backward from the current line for the previous marker and
+ * moves the cursor to that line. Beeps if no marker is found.
+ */
 void CIntelliEditView::OnOptionsFindPrevmarker()
 {
 	auto& rCtrl{ GetCtrl() };
@@ -519,6 +743,12 @@ void CIntelliEditView::OnOptionsFindPrevmarker()
 		MessageBeep(MB_ICONHAND);
 }
 
+/**
+ * @brief Toggles the fold margin visibility.
+ *
+ * Shows or hides the margin used for code folding (collapsing/expanding
+ * code blocks).
+ */
 void CIntelliEditView::OnOptionsFoldMargin()
 {
 	auto& rCtrl{ GetCtrl() };
@@ -529,6 +759,13 @@ void CIntelliEditView::OnOptionsFoldMargin()
 		rCtrl.SetMarginWidthN(2, 16);
 }
 
+/**
+ * @brief Updates the UI state for the Fold Margin command.
+ *
+ * Sets the check mark based on whether the fold margin is visible.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateOptionsFoldMargin(CCmdUI* pCmdUI)
 {
@@ -536,6 +773,11 @@ void CIntelliEditView::OnUpdateOptionsFoldMargin(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(GetCtrl().GetMarginWidthN(2) != 0);
 }
 
+/**
+ * @brief Toggles the selection margin visibility.
+ *
+ * Shows or hides the margin used for line selection.
+ */
 void CIntelliEditView::OnOptionsSelectionMargin()
 {
 	auto& rCtrl{ GetCtrl() };
@@ -546,6 +788,13 @@ void CIntelliEditView::OnOptionsSelectionMargin()
 		rCtrl.SetMarginWidthN(1, 16);
 }
 
+/**
+ * @brief Updates the UI state for the Selection Margin command.
+ *
+ * Sets the check mark based on whether the selection margin is visible.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateOptionsSelectionMargin(CCmdUI* pCmdUI)
 {
@@ -553,6 +802,11 @@ void CIntelliEditView::OnUpdateOptionsSelectionMargin(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(GetCtrl().GetMarginWidthN(1) != 0);
 }
 
+/**
+ * @brief Toggles line number visibility.
+ *
+ * Shows or hides line numbers in the editor margin.
+ */
 void CIntelliEditView::OnOptionsViewLinenumbers()
 {
 	auto& rCtrl{ GetCtrl() };
@@ -563,6 +817,13 @@ void CIntelliEditView::OnOptionsViewLinenumbers()
 		rCtrl.SetMarginWidthN(0, 32);
 }
 
+/**
+ * @brief Updates the UI state for the View Line Numbers command.
+ *
+ * Sets the check mark based on whether line numbers are visible.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateOptionsViewLinenumbers(CCmdUI* pCmdUI)
 {
@@ -570,6 +831,13 @@ void CIntelliEditView::OnUpdateOptionsViewLinenumbers(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(GetCtrl().GetMarginWidthN(0) != 0);
 }
 
+/**
+ * @brief Updates the insert/overtype indicator.
+ *
+ * Updates the status bar indicator to show "OVR" when in overtype mode.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateInsert(CCmdUI* pCmdUI)
 {
@@ -580,6 +848,13 @@ void CIntelliEditView::OnUpdateInsert(CCmdUI* pCmdUI)
 	pCmdUI->SetText(sText);
 }
 
+/**
+ * @brief Updates the style indicator.
+ *
+ * Displays the current style number at the cursor position in the status bar.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateStyle(CCmdUI* pCmdUI)
 {
@@ -592,6 +867,13 @@ void CIntelliEditView::OnUpdateStyle(CCmdUI* pCmdUI)
 	pCmdUI->SetText(sLine);
 }
 
+/**
+ * @brief Updates the fold level indicator.
+ *
+ * Displays the current fold level at the cursor position in the status bar.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateFold(CCmdUI* pCmdUI)
 {
@@ -606,6 +888,13 @@ void CIntelliEditView::OnUpdateFold(CCmdUI* pCmdUI)
 	pCmdUI->SetText(sLine);
 }
 
+/**
+ * @brief Updates the line, column, and position indicator.
+ *
+ * Displays the current line number, column, and character position in the status bar.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 #pragma warning(suppress: 26429)
 void CIntelliEditView::OnUpdateLine(CCmdUI* pCmdUI)
 {
@@ -620,6 +909,16 @@ void CIntelliEditView::OnUpdateLine(CCmdUI* pCmdUI)
 	pCmdUI->SetText(sLine);
 }
 
+/**
+ * @brief Handles character added event for auto-completion.
+ *
+ * Provides examples of auto-completion functionality:
+ * - Shows completion list for "scintilla is " phrase
+ * - Shows completion list for "res" prefix (resize/restart/restore)
+ * - Demonstrates indicator usage for "sample_indicator" text
+ *
+ * @param pSCNotification Pointer to Scintilla notification data containing character info.
+ */
 //Some simple examples of implementing auto completion
 void CIntelliEditView::OnCharAdded(_Inout_ Scintilla::NotificationData* pSCNotification)
 {
@@ -701,6 +1000,14 @@ void CIntelliEditView::OnCharAdded(_Inout_ Scintilla::NotificationData* pSCNotif
 	}
 }
 
+/**
+ * @brief Handles mouse dwell start event for call tips.
+ *
+ * Displays a call tip when the mouse hovers over specific text. Example
+ * implementation shows a call tip for the word "author".
+ *
+ * @param pSCNotification Pointer to Scintilla notification data containing dwell position.
+ */
 //A simple example of call tips
 void CIntelliEditView::OnDwellStart(_Inout_ Scintilla::NotificationData* pSCNotification)
 {
@@ -731,6 +1038,13 @@ void CIntelliEditView::OnDwellStart(_Inout_ Scintilla::NotificationData* pSCNoti
 	}
 }
 
+/**
+ * @brief Handles mouse dwell end event.
+ *
+ * Cancels any active call tip when the mouse stops hovering.
+ *
+ * @param pSCNotification Pointer to Scintilla notification data (unused).
+ */
 void CIntelliEditView::OnDwellEnd(_Inout_ Scintilla::NotificationData* /*pSCNotification*/)
 {
 	auto& rCtrl{ GetCtrl() };
@@ -740,6 +1054,15 @@ void CIntelliEditView::OnDwellEnd(_Inout_ Scintilla::NotificationData* /*pSCNoti
 		rCtrl.CallTipCancel();
 }
 
+/**
+ * @brief Handles window activation/deactivation.
+ *
+ * Cancels any active call tips when the window loses focus.
+ *
+ * @param nState Window activation state (WA_ACTIVE, WA_CLICKACTIVE, or WA_INACTIVE).
+ * @param pWndOther Pointer to the window being activated or deactivated.
+ * @param bMinimized TRUE if the window is minimized; FALSE otherwise.
+ */
 #pragma warning(suppress: 26434)
 void CIntelliEditView::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
@@ -753,6 +1076,14 @@ void CIntelliEditView::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 		rCtrl.CallTipCancel();
 }
 
+/**
+ * @brief Handles attempt to modify read-only document.
+ *
+ * Prompts the user whether to allow modification of a read-only file.
+ * If the user confirms, the read-only flag is cleared.
+ *
+ * @param pSCNotification Pointer to Scintilla notification data (unused).
+ */
 void CIntelliEditView::OnModifyAttemptRO(_Inout_ Scintilla::NotificationData* /*pSCNotification*/)
 {
 #pragma warning(suppress: 26493)
@@ -760,6 +1091,14 @@ void CIntelliEditView::OnModifyAttemptRO(_Inout_ Scintilla::NotificationData* /*
 		GetCtrl().SetReadOnly(FALSE);
 }
 
+/**
+ * @brief Handles document modification event.
+ *
+ * Responds to document modifications. In debug mode, demonstrates the
+ * InsertCheck notification by replacing "Dublin" with "Capital of Ireland".
+ *
+ * @param pSCNotification Pointer to Scintilla notification data containing modification type and text.
+ */
 #pragma warning(suppress: 26440)
 void CIntelliEditView::OnModified(_Inout_ Scintilla::NotificationData* pSCNotification)
 {
@@ -775,11 +1114,29 @@ void CIntelliEditView::OnModified(_Inout_ Scintilla::NotificationData* pSCNotifi
 	}
 }
 
+/**
+ * @brief Creates the Scintilla editor control.
+ *
+ * Factory method that creates and returns a unique pointer to the
+ * Scintilla control used by this view.
+ *
+ * @return Unique pointer to the created Scintilla control.
+ */
 std::unique_ptr<Scintilla::CScintillaCtrl> CIntelliEditView::CreateScintillaControl()
 {
 	return std::make_unique<CScintillaDemoCtrl>();
 }
 
+/**
+ * @brief Handles window creation.
+ *
+ * Initializes all lexers for syntax highlighting support. Creates lexer
+ * instances for: Batch, CMake, C++, CSS, HTML, JSON, Makefile, MATLAB,
+ * Markdown, Python, R, Rust, Shell, SQL, TCL, and XML.
+ *
+ * @param lpCreateStruct Pointer to the window creation structure.
+ * @return 0 on success; -1 on failure.
+ */
 #pragma warning(suppress: 26434)
 int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -934,225 +1291,176 @@ int CIntelliEditView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
+/**
+ * @brief Serializes the document.
+ *
+ * Called during document save/load operations. Triggers syntax highlighting
+ * selection based on the file extension.
+ *
+ * @param ar Archive object for serialization.
+ */
 void CIntelliEditView::Serialize(CArchive& ar)
 {
 	__super::Serialize(ar);
 	SelectHighlight(ar.m_strFileName);
 }
 
+/**
+ * @brief Selects appropriate syntax highlighting based on file extension.
+ *
+ * Determines the file type from the extension and configures the appropriate
+ * lexer and keywords for syntax highlighting. Supports multiple languages
+ * including:
+ * - Batch (.bat)
+ * - CMake (.cmake, CMakeLists.txt)
+ * - C/C++ (.c, .cpp, .cxx, .h, .hpp)
+ * - C# (.cs)
+ * - CSS (.css)
+ * - HTML/Web (.htm, .html, .asp, .aspx, .php)
+ * - Groovy (.groovy)
+ * - Java (.java)
+ * - JavaScript (.js)
+ * - JSON (.json)
+ * - MATLAB (.m)
+ * - Makefile (.mak, makefile)
+ * - Markdown (.md)
+ * - Python (.py)
+ * - R (.r)
+ * - Rust (.rs)
+ * - Shell (.sh)
+ * - SQL (.sql)
+ * - TCL (.tcl)
+ * - XML (.xml)
+ * - Plain text (.txt, .log, .ini)
+ *
+ * @param strTempPath Full path to the file being opened.
+ */
 void CIntelliEditView::SelectHighlight(CString strTempPath)
 {
+	if (bLexerKeywords)
+		return;
+
 	TCHAR lpszDrive[_MAX_DRIVE] = { 0 };
 	TCHAR lpszFolder[_MAX_DIR] = { 0 };
 	TCHAR lpszFileName[_MAX_FNAME] = { 0 };
 	TCHAR lpszExtension[_MAX_EXT] = { 0 };
 
-	if (!bLexerKeywords)
+	auto& rCtrl{ GetCtrl() };
+
+	strTempPath.MakeLower();
+	_tsplitpath_s(strTempPath,
+		lpszDrive, _MAX_DRIVE,
+		lpszFolder, _MAX_DIR,
+		lpszFileName, _MAX_FNAME,
+		lpszExtension, _MAX_EXT);
+	bLexerKeywords = !strTempPath.IsEmpty();
+
+	CString strExt(lpszExtension);
+	CString strFileName(lpszFileName);
+
+	if (strExt == _T(".bat"))
 	{
-		auto& rCtrl{ GetCtrl() };
-
-		strTempPath.MakeLower();
-		_tsplitpath_s(strTempPath,
-			lpszDrive, _MAX_DRIVE,
-			lpszFolder, _MAX_DIR,
-			lpszFileName, _MAX_FNAME,
-			lpszExtension, _MAX_EXT);
-		bLexerKeywords = !strTempPath.IsEmpty();
-
-		if (_tcsicmp(lpszExtension, _T(".bat")) == 0)
-		{
-			// Setup the Batch Lexer
-			rCtrl.SetILexer(m_batLexer);
-		}
-		else
-		{
-			if ((_tcsicmp(lpszExtension, _T(".cmake")) == 0) ||
-				((_tcsicmp(lpszFileName, _T("cmakelists")) == 0) && (_tcsicmp(lpszExtension, _T(".txt")) == 0)))
-			{
-				// Setup the CMake Lexer
-				rCtrl.SetILexer(m_cmakeLexer);
-				rCtrl.SetKeyWords(0, g_cmakeKeywords);
-			}
-			else
-			{
-				if ((_tcsicmp(lpszExtension, _T(".c")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".cpp")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".cxx")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".h")) == 0) ||
-					(_tcsicmp(lpszExtension, _T(".hpp")) == 0))
-				{
-					// Setup the C++ Lexer
-					rCtrl.SetILexer(m_cppLexer);
-					rCtrl.SetKeyWords(0, g_cppKeywords);
-				}
-				else
-				{
-					if (_tcsicmp(lpszExtension, _T(".cs")) == 0)
-					{
-						// Setup the C++ Lexer
-						rCtrl.SetILexer(m_cppLexer);
-						rCtrl.SetKeyWords(0, g_csKeywords);
-					}
-					else
-					{
-						if (_tcsicmp(lpszExtension, _T(".css")) == 0)
-						{
-							// Setup the CSS Lexer
-							rCtrl.SetILexer(m_cssLexer);
-						}
-						else
-						{
-							if ((_tcsicmp(lpszExtension, _T(".htm")) == 0) ||
-								(_tcsicmp(lpszExtension, _T(".html")) == 0) ||
-								(_tcsicmp(lpszExtension, _T(".asp")) == 0) ||
-								(_tcsicmp(lpszExtension, _T(".aspx")) == 0) ||
-								(_tcsicmp(lpszExtension, _T(".php")) == 0))
-							{
-								// Setup the HTML Lexer
-								rCtrl.SetILexer(m_htmlLexer);
-							}
-							else
-							{
-								if (_tcsicmp(lpszExtension, _T(".groovy")) == 0)
-								{
-									// Setup the C++ Lexer
-									rCtrl.SetILexer(m_cppLexer);
-									rCtrl.SetKeyWords(0, g_groovyKeywords);
-								}
-								else
-								{
-									if (_tcsicmp(lpszExtension, _T(".java")) == 0)
-									{
-										// Setup the C++ Lexer
-										rCtrl.SetILexer(m_cppLexer);
-										rCtrl.SetKeyWords(0, g_javaKeywords);
-									}
-									else
-									{
-										if (_tcsicmp(lpszExtension, _T(".js")) == 0)
-										{
-											// Setup the C++ Lexer
-											rCtrl.SetILexer(m_cppLexer);
-											rCtrl.SetKeyWords(0, g_jsKeywords);
-										}
-										else
-										{
-											if (_tcsicmp(lpszExtension, _T(".json")) == 0)
-											{
-												// Setup the JSON Lexer
-												rCtrl.SetILexer(m_jsonLexer);
-											}
-											else
-											{
-												if (_tcsicmp(lpszExtension, _T(".m")) == 0)
-												{
-													// Setup the MATLAB Lexer
-													rCtrl.SetILexer(m_matLexer);
-												}
-												else
-												{
-													if ((_tcsicmp(lpszExtension, _T(".mak")) == 0) ||
-														(_tcsicmp(lpszFileName, _T("makefile")) == 0))
-													{
-														// Setup the Makefile Lexer
-														rCtrl.SetILexer(m_makLexer);
-													}
-													else
-													{
-														if (_tcsicmp(lpszExtension, _T(".md")) == 0)
-														{
-															// Setup the CSS Lexer
-															rCtrl.SetILexer(m_mdLexer);
-														}
-														else
-														{
-															if (_tcsicmp(lpszExtension, _T(".py")) == 0)
-															{
-																// Setup the Python Lexer
-																rCtrl.SetILexer(m_pyLexer);
-																rCtrl.SetKeyWords(0, g_pyKeywords);
-															}
-															else
-															{
-																if (_tcsicmp(lpszExtension, _T(".r")) == 0)
-																{
-																	// Setup the R Lexer
-																	rCtrl.SetILexer(m_rLexer);
-																	rCtrl.SetKeyWords(0, g_rKeywords);
-																}
-																else
-																{
-																	if (_tcsicmp(lpszExtension, _T(".rs")) == 0)
-																	{
-																		// Setup the Rust Lexer
-																		rCtrl.SetILexer(m_rsLexer);
-																		rCtrl.SetKeyWords(0, g_rsKeywords);
-																	}
-																	else
-																	{
-																		if (_tcsicmp(lpszExtension, _T(".sh")) == 0)
-																		{
-																			// Setup the Shell Lexer
-																			rCtrl.SetILexer(m_shLexer);
-																		}
-																		else
-																		{
-																			if (_tcsicmp(lpszExtension, _T(".sql")) == 0)
-																			{
-																				// Setup the SQL Lexer
-																				rCtrl.SetILexer(m_sqlLexer);
-																				rCtrl.SetKeyWords(0, g_sqlKeywords);
-																			}
-																			else
-																			{
-																				if (_tcsicmp(lpszExtension, _T(".tcl")) == 0)
-																				{
-																					// Setup the TCL Lexer
-																					rCtrl.SetILexer(m_tclLexer);
-																					rCtrl.SetKeyWords(0, g_tclKeywords);
-																				}
-																				else
-																				{
-																					if (_tcsicmp(lpszExtension, _T(".xml")) == 0)
-																					{
-																						// Setup the XML Lexer
-																						rCtrl.SetILexer(m_xmlLexer);
-																					}
-																					else
-																					{
-																						if ((_tcsicmp(lpszExtension, _T(".txt")) == 0) ||
-																							(_tcsicmp(lpszExtension, _T(".log")) == 0) ||
-																							(_tcsicmp(lpszExtension, _T(".ini")) == 0) ||
-																							(_tcsicmp(lpszExtension, _T("")) == 0))
-																						{
-																							rCtrl.SetupDirectAccess();
-																							rCtrl.SetILexer(nullptr);
-																						}
-																						else
-																						{
-																							// Setup the C++ Lexer
-																							rCtrl.SetILexer(m_cppLexer);
-																							rCtrl.SetKeyWords(0, g_cppKeywords);
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		rCtrl.SetILexer(m_batLexer);
+	}
+	else if (strExt == _T(".cmake") || (strFileName == _T("cmakelists") && strExt == _T(".txt")))
+	{
+		rCtrl.SetILexer(m_cmakeLexer);
+		rCtrl.SetKeyWords(0, g_cmakeKeywords);
+	}
+	else if (strExt == _T(".c") || strExt == _T(".cpp") || strExt == _T(".cxx") || 
+			 strExt == _T(".h") || strExt == _T(".hpp"))
+	{
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_cppKeywords);
+	}
+	else if (strExt == _T(".cs"))
+	{
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_csKeywords);
+	}
+	else if (strExt == _T(".css"))
+	{
+		rCtrl.SetILexer(m_cssLexer);
+	}
+	else if (strExt == _T(".htm") || strExt == _T(".html") || strExt == _T(".asp") || 
+			 strExt == _T(".aspx") || strExt == _T(".php"))
+	{
+		rCtrl.SetILexer(m_htmlLexer);
+	}
+	else if (strExt == _T(".groovy"))
+	{
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_groovyKeywords);
+	}
+	else if (strExt == _T(".java"))
+	{
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_javaKeywords);
+	}
+	else if (strExt == _T(".js"))
+	{
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_jsKeywords);
+	}
+	else if (strExt == _T(".json"))
+	{
+		rCtrl.SetILexer(m_jsonLexer);
+	}
+	else if (strExt == _T(".m"))
+	{
+		rCtrl.SetILexer(m_matLexer);
+		rCtrl.SetKeyWords(0, g_matlabKeywords);
+	}
+	else if (strExt == _T(".mak") || strFileName == _T("makefile"))
+	{
+		rCtrl.SetILexer(m_makLexer);
+	}
+	else if (strExt == _T(".md"))
+	{
+		rCtrl.SetILexer(m_mdLexer);
+	}
+	else if (strExt == _T(".py"))
+	{
+		rCtrl.SetILexer(m_pyLexer);
+		rCtrl.SetKeyWords(0, g_pyKeywords);
+	}
+	else if (strExt == _T(".r"))
+	{
+		rCtrl.SetILexer(m_rLexer);
+		rCtrl.SetKeyWords(0, g_rKeywords);
+	}
+	else if (strExt == _T(".rs"))
+	{
+		rCtrl.SetILexer(m_rsLexer);
+		rCtrl.SetKeyWords(0, g_rsKeywords);
+	}
+	else if (strExt == _T(".sh"))
+	{
+		rCtrl.SetILexer(m_shLexer);
+	}
+	else if (strExt == _T(".sql"))
+	{
+		rCtrl.SetILexer(m_sqlLexer);
+		rCtrl.SetKeyWords(0, g_sqlKeywords);
+	}
+	else if (strExt == _T(".tcl"))
+	{
+		rCtrl.SetILexer(m_tclLexer);
+		rCtrl.SetKeyWords(0, g_tclKeywords);
+	}
+	else if (strExt == _T(".xml"))
+	{
+		rCtrl.SetILexer(m_xmlLexer);
+	}
+	else if (strExt == _T(".txt") || strExt == _T(".log") || 
+			 strExt == _T(".ini") || strExt.IsEmpty())
+	{
+		rCtrl.SetupDirectAccess();
+		rCtrl.SetILexer(nullptr);
+	}
+	else
+	{
+		rCtrl.SetILexer(m_cppLexer);
+		rCtrl.SetKeyWords(0, g_cppKeywords);
 	}
 }

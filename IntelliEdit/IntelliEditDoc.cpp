@@ -32,6 +32,15 @@ IntelliEdit. If not, see <http://www.opensource.org/licenses/gpl-3.0.html>*/
 #define new DEBUG_NEW
 #endif
 
+/**
+ * @class CIntelliEditDoc
+ * @brief Document class for IntelliEdit application.
+ *
+ * This class manages the document state and file operations for the IntelliEdit
+ * text editor. It handles file manipulation operations such as rename, move, copy,
+ * delete, and provides property access for the currently opened file.
+ */
+
 // CIntelliEditDoc
 
 IMPLEMENT_DYNCREATE(CIntelliEditDoc, CScintillaDoc)
@@ -53,16 +62,34 @@ END_MESSAGE_MAP()
 
 // CIntelliEditDoc construction/destruction
 
+/**
+ * @brief Default constructor for CIntelliEditDoc.
+ *
+ * Initializes a new instance of the document class.
+ */
 CIntelliEditDoc::CIntelliEditDoc() noexcept
 {
 	// TODO: add one-time construction code here
 
 }
 
+/**
+ * @brief Destructor for CIntelliEditDoc.
+ *
+ * Cleans up resources used by the document.
+ */
 CIntelliEditDoc::~CIntelliEditDoc()
 {
 }
 
+/**
+ * @brief Called when a new document is created.
+ *
+ * Initializes the document for a new file. This is called when the user
+ * creates a new document or when the SDI framework reuses this document.
+ *
+ * @return TRUE if the document was successfully initialized; FALSE otherwise.
+ */
 BOOL CIntelliEditDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
@@ -90,7 +117,15 @@ BOOL CIntelliEditDoc::OnNewDocument()
 
 #ifdef SHARED_HANDLERS
 
-// Support for thumbnails
+/**
+ * @brief Draws a thumbnail representation of the document.
+ *
+ * This method is called by the Windows shell to generate a thumbnail
+ * preview of the document content.
+ *
+ * @param dc Reference to the device context to draw on.
+ * @param lprcBounds Pointer to the bounding rectangle for the thumbnail.
+ */
 void CIntelliEditDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 {
 	// Modify this code to draw the document's data
@@ -111,7 +146,13 @@ void CIntelliEditDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 	dc.SelectObject(pOldFont);
 }
 
-// Support for Search Handlers
+/**
+ * @brief Initializes the search content for the document.
+ *
+ * This method is called by the Windows shell search handler to extract
+ * searchable content from the document. The content should be formatted
+ * with semicolon separators between different parts.
+ */
 void CIntelliEditDoc::InitializeSearchContent()
 {
 	CString strSearchContent;
@@ -122,6 +163,16 @@ void CIntelliEditDoc::InitializeSearchContent()
 	SetSearchContent(strSearchContent);
 }
 
+/**
+ * @brief Sets the search content for the document.
+ *
+ * Stores searchable text content that can be indexed by the Windows
+ * shell search handler. If the value is empty, the search content
+ * chunk is removed.
+ *
+ * @param value The search content string to store. Parts should be
+ *              separated by semicolons.
+ */
 void CIntelliEditDoc::SetSearchContent(const CString& value)
 {
 	if (value.IsEmpty())
@@ -145,11 +196,25 @@ void CIntelliEditDoc::SetSearchContent(const CString& value)
 // CIntelliEditDoc diagnostics
 
 #ifdef _DEBUG
+/**
+ * @brief Validates the document object in debug builds.
+ *
+ * Performs assertion checks to verify the document object is in a
+ * valid state. Called by the framework in debug builds.
+ */
 void CIntelliEditDoc::AssertValid() const
 {
 	CDocument::AssertValid();
 }
 
+/**
+ * @brief Dumps the document object state to a dump context.
+ *
+ * Outputs diagnostic information about the document object for debugging
+ * purposes. Called by the framework in debug builds.
+ *
+ * @param dc Reference to the dump context to write to.
+ */
 void CIntelliEditDoc::Dump(CDumpContext& dc) const
 {
 	CDocument::Dump(dc);
@@ -158,6 +223,14 @@ void CIntelliEditDoc::Dump(CDumpContext& dc) const
 
 // CIntelliEditDoc commands
 
+/**
+ * @brief Handles the File Rename command.
+ *
+ * Prompts the user to enter a new filename and renames the current document
+ * file using the Windows shell API. The operation supports undo through the
+ * Recycle Bin. After a successful rename, the document is reopened with the
+ * new filename and the old document is closed.
+ */
 void CIntelliEditDoc::OnFileRename()
 {
 	// Get the name of the current file
@@ -219,12 +292,28 @@ void CIntelliEditDoc::OnFileRename()
 	}
 }
 
+/**
+ * @brief Updates the UI state for the File Rename command.
+ *
+ * Enables the rename command only when a file is currently open and has
+ * no unsaved modifications.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 void CIntelliEditDoc::OnUpdateFileRename(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
 }
 
+/**
+ * @brief Handles the File Move command.
+ *
+ * Prompts the user to select a destination folder and moves the current
+ * document file to that location using the Windows shell API. The operation
+ * supports undo through the Recycle Bin. After a successful move, the
+ * document is reopened from the new location and the old document is closed.
+ */
 void CIntelliEditDoc::OnFileMove()
 {
 	// Get the name of the current file
@@ -293,12 +382,28 @@ void CIntelliEditDoc::OnFileMove()
 	}
 }
 
+/**
+ * @brief Updates the UI state for the File Move command.
+ *
+ * Enables the move command only when a file is currently open and has
+ * no unsaved modifications.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 void CIntelliEditDoc::OnUpdateFileMove(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
 }
 
+/**
+ * @brief Handles the File Copy command.
+ *
+ * Prompts the user to select a destination folder and copies the current
+ * document file to that location using the Windows shell API. The operation
+ * supports undo through the Recycle Bin. After a successful copy, the
+ * document path is updated to reflect the new location.
+ */
 void CIntelliEditDoc::OnFileCopy()
 {
 	// Get the name of the current file
@@ -351,12 +456,30 @@ void CIntelliEditDoc::OnFileCopy()
 	}
 }
 
+/**
+ * @brief Updates the UI state for the File Copy command.
+ *
+ * Enables the copy command only when a file is currently open and has
+ * no unsaved modifications.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 void CIntelliEditDoc::OnUpdateFileCopy(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
 }
 
+/**
+ * @brief Handles the File Delete command.
+ *
+ * Deletes the current document file using the Windows shell API. If the SHIFT
+ * key is not held down, the operation supports undo through the Recycle Bin.
+ * After successful deletion, the document is closed.
+ *
+ * @note If SHIFT is held down during the operation, the file is permanently
+ *       deleted without being sent to the Recycle Bin.
+ */
 void CIntelliEditDoc::OnFileDelete()
 {
 	// Create a Multi SZ string with the file to delete
@@ -396,12 +519,27 @@ void CIntelliEditDoc::OnFileDelete()
 	}
 }
 
+/**
+ * @brief Updates the UI state for the File Delete command.
+ *
+ * Enables the delete command only when a file is currently open and has
+ * no unsaved modifications.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 void CIntelliEditDoc::OnUpdateFileDelete(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
 	pCmdUI->Enable(!GetPathName().IsEmpty() && !IsModified());
 }
 
+/**
+ * @brief Handles the Properties command.
+ *
+ * Opens the Windows shell properties dialog for the current document file.
+ * This displays file system information such as size, attributes, dates,
+ * and security settings.
+ */
 void CIntelliEditDoc::OnProperties()
 {
 	CString sPathName{ GetPathName() };
@@ -418,6 +556,13 @@ void CIntelliEditDoc::OnProperties()
 	sPathName.ReleaseBuffer();
 }
 
+/**
+ * @brief Updates the UI state for the Properties command.
+ *
+ * Enables the properties command only when a file is currently open.
+ *
+ * @param pCmdUI Pointer to the command UI object to update.
+ */
 void CIntelliEditDoc::OnUpdateProperties(CCmdUI* pCmdUI)
 {
 #pragma warning(suppress: 26486 26489)
