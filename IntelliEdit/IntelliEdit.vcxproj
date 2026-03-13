@@ -244,6 +244,7 @@
   <ItemGroup>
     <None Include="..\CODE_OF_CONDUCT.md" />
     <None Include="..\CONTRIBUTING.md" />
+    <None Include="..\IntelliEdit.html" />
     <None Include="..\LICENSE" />
     <None Include="..\README.md" />
     <None Include="IntelliEdit.reg" />
@@ -257,6 +258,7 @@
     <ResourceCompile Include="IntelliEdit.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\IntelliEdit.png" />
     <Image Include="res\buttons.bmp" />
     <Image Include="res\filelarge.bmp" />
     <Image Include="res\filelarge.png" />

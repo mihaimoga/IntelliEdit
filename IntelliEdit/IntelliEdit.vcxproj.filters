@@ -135,6 +135,7 @@
     <None Include="..\README.md" />
     <None Include="SoftwareContentRegister.html" />
     <None Include="packages.config" />
+    <None Include="..\IntelliEdit.html" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IntelliEdit.rc">
@@ -184,6 +185,7 @@
     <Image Include="res\filesmall.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\IntelliEdit.png" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
