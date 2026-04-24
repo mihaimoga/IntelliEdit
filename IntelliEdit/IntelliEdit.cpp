@@ -113,7 +113,7 @@ BOOL CIntelliEditApp::InitInstance()
 		CCommandLineInfo cmdInfo;
 		ParseCommandLine(cmdInfo);
 
-		AfxMessageBox(_T("Previous version detected, will now restore it..."), MB_OK | MB_ICONINFORMATION);
+		AfxMessageBox(IDS_PREV_VERSION_DETECTED, MB_OK | MB_ICONINFORMATION);
 		m_pInstanceChecker.ActivatePreviousInstance(cmdInfo.m_strFileName);
 		return FALSE;
 	}
@@ -134,15 +134,13 @@ BOOL CIntelliEditApp::InitInstance()
 	m_hLexilla = LoadLibraryFromApplicationDirectory(sLexillaDLL);
 	if (m_hLexilla == nullptr)
 	{
-		CString sMsg;
-		sMsg.Format(_T("%s is not installed, Please built the Scintilla '%s' and copy it into this application's directory"), sLexillaDLL.GetString(), sLexillaDLL.GetString());
-		AfxMessageBox(sMsg);
+		AfxMessageBox(IDS_LEXILLA_NOT_FOUND);
 		return FALSE;
 	}
 	m_hScintilla = LoadLibraryFromApplicationDirectory(_T("Scintilla.dll"));
 	if (m_hScintilla == nullptr)
 	{
-		AfxMessageBox(_T("Scintilla DLL is not installed, Please built the Scintilla 'Scintilla.dll' and copy it into this application's directory"));
+		AfxMessageBox(IDS_SCINTILLA_NOT_FOUND);
 		return FALSE;
 	}
 
@@ -151,7 +149,7 @@ BOOL CIntelliEditApp::InitInstance()
 	m_pCreateLexer = reinterpret_cast<Lexilla::CreateLexerFn>(GetProcAddress(m_hLexilla, LEXILLA_CREATELEXER));
 	if (m_pCreateLexer == nullptr)
 	{
-		AfxMessageBox(_T("Could not find the Lexilla CreateLexer function"));
+		AfxMessageBox(IDS_CANNOT_CREATE_LEXER);
 		return FALSE;
 	}
 
