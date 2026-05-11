@@ -128,14 +128,14 @@
     <None Include="res\IntelliEdit.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReleaseNotes.html" />
     <None Include="..\LICENSE" />
     <None Include="..\CODE_OF_CONDUCT.md" />
     <None Include="..\CONTRIBUTING.md" />
     <None Include="..\README.md" />
-    <None Include="SoftwareContentRegister.html" />
     <None Include="packages.config" />
     <None Include="..\IntelliEdit.html" />
+    <None Include="..\ReleaseNotes.html" />
+    <None Include="..\SoftwareContentRegister.html" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IntelliEdit.rc">
