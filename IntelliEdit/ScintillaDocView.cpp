@@ -211,8 +211,7 @@ bCase{ FALSE },
 bNext{ TRUE },
 bWord{ FALSE },
 bRegularExpression{ FALSE }
-{
-}
+{}
 
 
 #pragma warning(suppress: 26433 26435 26440)
@@ -222,8 +221,7 @@ BEGIN_MESSAGE_MAP(CScintillaFindReplaceDlg, CFindReplaceDialog) //NOLINT(moderni
 END_MESSAGE_MAP()
 
 CScintillaFindReplaceDlg::CScintillaFindReplaceDlg() noexcept : m_bRegularExpression{ FALSE }
-{
-}
+{}
 
 BOOL CScintillaFindReplaceDlg::Create(BOOL bFindDialogOnly, LPCTSTR lpszFindWhat, LPCTSTR lpszReplaceWith, DWORD dwFlags, CWnd* pParentWnd)
 {
@@ -331,8 +329,7 @@ m_bPersistMarginSettings{ TRUE },
 m_bCPP11Regex{ TRUE },
 m_BOM{ BOM::Unknown },
 m_nLoadSaveBufferSize{ 4096 }
-{
-}
+{}
 
 CScintillaCtrl& CScintillaView::GetCtrl()
 {
@@ -942,9 +939,8 @@ void CScintillaView::AdjustFindDialogPosition()
 
 	auto& rCtrl{ GetCtrl() };
 	const Position nStart{ rCtrl.GetSelectionStart() };
-	CPoint point;
-	point.x = rCtrl.PointXFromPosition(nStart);
-	point.y = rCtrl.PointYFromPosition(nStart);
+#pragma warning(suppress: 26472)
+	CPoint point{ static_cast<LONG>(rCtrl.PointXFromPosition(nStart)), static_cast<LONG>(rCtrl.PointYFromPosition(nStart)) };
 	ClientToScreen(&point);
 	CRect rectDlg;
 	g_scintillaEditState.pFindReplaceDlg->GetWindowRect(&rectDlg);

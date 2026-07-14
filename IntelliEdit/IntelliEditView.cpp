@@ -752,7 +752,7 @@ void CIntelliEditView::OnOptionsFindPrevmarker()
 void CIntelliEditView::OnOptionsFoldMargin()
 {
 	auto& rCtrl{ GetCtrl() };
-	const int nMarginWidth{ rCtrl.GetMarginWidthN(2) };
+	const Scintilla::CScintillaCtrl::pixels nMarginWidth{ rCtrl.GetMarginWidthN(2) };
 	if (nMarginWidth)
 		rCtrl.SetMarginWidthN(2, 0);
 	else
@@ -781,7 +781,7 @@ void CIntelliEditView::OnUpdateOptionsFoldMargin(CCmdUI* pCmdUI)
 void CIntelliEditView::OnOptionsSelectionMargin()
 {
 	auto& rCtrl{ GetCtrl() };
-	const int nMarginWidth{ rCtrl.GetMarginWidthN(1) };
+	const Scintilla::CScintillaCtrl::pixels nMarginWidth{ rCtrl.GetMarginWidthN(1) };
 	if (nMarginWidth)
 		rCtrl.SetMarginWidthN(1, 0);
 	else
@@ -810,7 +810,7 @@ void CIntelliEditView::OnUpdateOptionsSelectionMargin(CCmdUI* pCmdUI)
 void CIntelliEditView::OnOptionsViewLinenumbers()
 {
 	auto& rCtrl{ GetCtrl() };
-	const int nMarginWidth{ rCtrl.GetMarginWidthN(0) };
+	const Scintilla::CScintillaCtrl::pixels nMarginWidth{ rCtrl.GetMarginWidthN(0) };
 	if (nMarginWidth)
 		rCtrl.SetMarginWidthN(0, 0);
 	else
