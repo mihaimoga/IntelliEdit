@@ -1456,7 +1456,7 @@ void CIntelliEditView::SelectHighlight(CString strTempPath)
 			 strExt == _T(".ini") || strExt.IsEmpty())
 	{
 		rCtrl.SetupDirectAccess();
-		// rCtrl.SetILexer(nullptr);
+		rCtrl.SetILexer(nullptr);
 	}
 	else
 	{
