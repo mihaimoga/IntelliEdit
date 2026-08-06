@@ -1017,8 +1017,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:IntelliEdit"
-        "ProductCode" = "8:{C3565CAE-9543-4CBF-B753-2C7F1B3DF535}"
-        "PackageCode" = "8:{05FBC31D-3636-4685-B753-245AD41AAB9E}"
+        "ProductCode" = "8:{5F5D56D5-9BFD-4719-852F-6C0CFE45DA87}"
+        "PackageCode" = "8:{F97EF880-245C-4BC8-ADF9-4F9D94C853BC}"
         "UpgradeCode" = "8:{367C1873-4336-40EE-AEDB-17E4660B7AA8}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
