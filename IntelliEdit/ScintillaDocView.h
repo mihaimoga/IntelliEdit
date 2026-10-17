@@ -167,11 +167,11 @@ namespace Scintilla
 		void Serialize(CArchive& ar) override;
 		BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
 		void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) override;
-		BOOL UserWantsMetric();
+		[[nodiscard]] BOOL UserWantsMetric();
 		virtual void LoadMarginSettings(const CString& sSection = _T("PageSetup"));
 		virtual void SaveMarginSettings(const CString& sSection = _T("PageSetup"));
-		virtual std::unique_ptr<CScintillaCtrl> CreateScintillaControl();
-		virtual BOOL ShouldDestroyFindReplaceDialog();
+		[[nodiscard]] virtual std::unique_ptr<CScintillaCtrl> CreateScintillaControl();
+		[[nodiscard]] virtual BOOL ShouldDestroyFindReplaceDialog();
 
 		//Notifications
 		virtual void OnStyleNeeded(_Inout_ NotificationData* pSCNotification);
@@ -226,6 +226,7 @@ namespace Scintilla
 
 		//Message handlers
 		afx_msg void OnPaint();
+		afx_msg void OnUpdateNeedCut(CCmdUI* pCmdUI);
 		afx_msg void OnUpdateNeedSel(CCmdUI* pCmdUI);
 		afx_msg void OnUpdateNeedPaste(CCmdUI* pCmdUI);
 		afx_msg void OnUpdateNeedText(CCmdUI* pCmdUI);
