@@ -144,6 +144,44 @@
 						<li>XML</li>
 					</ul>
 
+					<h2 id="roadmap">Roadmap</h2>
+					<p>This roadmap outlines where <em>IntelliEdit</em> is heading. It brings together planned improvements, ideas for features that are not available yet, and the maintenance work that goes into every release. Items are grouped by horizon rather than by date, and their order may change as feedback arrives or as the libraries <em>IntelliEdit</em> builds on evolve, so please treat it as a statement of intent, not a promise. For everything that has already shipped, see the <a href="ReleaseNotes.html">Release Notes</a>.</p>
+					<p class="text-body-secondary"><small>Last reviewed: November 2026 (version 1.21 in development).</small></p>
+
+					<h3>Now <small class="text-body-secondary fw-normal">in progress and ongoing</small></h3>
+					<ul>
+						<li><strong>Up-to-date components</strong>: each release picks up the latest Scintilla and Lexilla (editing and syntax highlighting), PJ Naughter's CScintillaCtrl, Microsoft Edge WebView2 (embedded browser) and genUp4win (automatic updates).</li>
+						<li><strong>Stability, security and performance</strong>: bug fixes, security updates and performance tuning continue alongside new features, so that <em>IntelliEdit</em> stays fast and small.</li>
+					</ul>
+
+					<h3>Next <small class="text-body-secondary fw-normal">planned, next in line</small></h3>
+					<ul>
+						<li><strong>Go To Line</strong>: jump straight to a given line number, a basic navigation command that is not available yet.</li>
+						<li><strong>Brace matching and auto-indent</strong>: highlight the bracket that matches the one next to the caret, and keep the indentation of the previous line when starting a new one.</li>
+						<li><strong>View options</strong>: ribbon toggles for word wrap (always on today), line numbers, the selection and fold margins, visible whitespace and line-end markers, and indentation guides.</li>
+						<li><strong>More languages and manual language selection</strong>: the language is chosen from the file extension today, and unknown extensions fall back to C/C++ highlighting. Lexilla already provides lexers for many languages that are not enabled yet, for example YAML, TOML, PowerShell, Ruby, Perl and Lua, and a language picker would let you override the automatic choice.</li>
+						<li><strong>Encoding and line endings</strong>: show the encoding (ASCII, UTF-8, UTF-16) and the line-ending style (CRLF, LF, CR) of the active document in the status bar, and convert between them. Today the encoding is detected when a file is opened and preserved when it is saved, but it can neither be seen nor changed.</li>
+					</ul>
+
+					<h3>Later <small class="text-body-secondary fw-normal">planned, larger efforts</small></h3>
+					<ul>
+						<li><strong>Word and keyword completion</strong>: suggest words from the current document and the keywords of its language while typing, replacing the few sample completions that are built in today.</li>
+						<li><strong>Fuller session restore</strong>: reopen each document at its last caret and scroll position and, later, recover unsaved and untitled documents after a restart or a crash. Today the session only brings back documents that were saved to a file.</li>
+						<li><strong>Find in Files</strong>: search, and optionally replace, across all the files of a folder, with the matches listed in a results panel.</li>
+						<li><strong>Themes and dark mode</strong>: choose a color theme for the editor and the ribbon, including a dark one. Syntax colors are fixed today.</li>
+					</ul>
+
+					<h3>Under consideration <small class="text-body-secondary fw-normal">ideas, not yet committed</small></h3>
+					<ul>
+						<li><strong>Multiple selections</strong>: edit several places at once. Scintilla supports it, but it is turned off in the editor today.</li>
+						<li><strong>Native ARM64 and high-DPI support</strong>: a native ARM64 build for Windows on Arm devices (<em>IntelliEdit</em> is currently built for x86 and x64) and Per-Monitor V2 DPI awareness for a sharper interface on high-DPI and mixed-DPI displays.</li>
+						<li><strong>Localized user interface</strong>: translated menus, commands and messages (the interface is English only today).</li>
+						<li><strong>Automated builds</strong>: a GitHub Actions workflow that builds the Win32 and x64 configurations for every pull request, so that contributions get quick feedback.</li>
+					</ul>
+
+					<h3>Help shape the roadmap</h3>
+					<p>Want to see something sooner, or have an idea that is not listed here? <a href="https://github.com/mihaimoga/IntelliEdit/issues" target="_blank">Open an issue</a> or start a conversation in <a href="https://github.com/mihaimoga/IntelliEdit/discussions" target="_blank">Discussions</a>. Contributions are welcome as well: any item above can be picked up through a pull request, as described in the next section. For enhancements, the issue must be approved by a project administrator (it will carry the <code>Accepted</code> label) before the pull request can be merged, so it is best to open the issue before you start coding.</p>
+
 					<h2>Create and Submit your Pull Request</h2>
 					<p>As noted in the <a href="https://github.com/mihaimoga/IntelliEdit/blob/main/CONTRIBUTING.md" target="_blank">Contributing Rules</a> for <em>IntelliEdit</em>, all Pull Requests need to be attached to a issue on GitHub. So the first step is to create an issue which requests that the functionality be improved (if it was already there) or added (if it was not yet there); in your issue, be sure to explain that you have the functionality definition ready, and will be submitting a Pull Request. The second step is to use the GitHub interface to create the Pull Request from your fork into the main repository. The final step is to wait for and respond to feedback from the developers as needed, until such time as your PR is accepted or rejected.</p>
 				</div>

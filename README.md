@@ -111,6 +111,43 @@ The following programming languages are supported by _IntelliEdit_:
 - TCL/TK
 - XML
 
+## Roadmap
+
+This roadmap outlines where _IntelliEdit_ is heading. It brings together planned improvements, ideas for features that are not available yet, and the maintenance work that goes into every release. Items are grouped by horizon rather than by date, and their order may change as feedback arrives or as the libraries _IntelliEdit_ builds on evolve, so please treat it as a statement of intent, not a promise. For everything that has already shipped, see the [Release Notes](https://github.com/mihaimoga/IntelliEdit/releases).
+
+_Last reviewed: November 2026 (version 1.21 in development)._
+
+### Now (in progress and ongoing)
+
+- **Up-to-date components**: each release picks up the latest Scintilla and Lexilla (editing and syntax highlighting), PJ Naughter's CScintillaCtrl, Microsoft Edge WebView2 (embedded browser) and genUp4win (automatic updates).
+- **Stability, security and performance**: bug fixes, security updates and performance tuning continue alongside new features, so that _IntelliEdit_ stays fast and small.
+
+### Next (planned, next in line)
+
+- **Go To Line**: jump straight to a given line number, a basic navigation command that is not available yet.
+- **Brace matching and auto-indent**: highlight the bracket that matches the one next to the caret, and keep the indentation of the previous line when starting a new one.
+- **View options**: ribbon toggles for word wrap (always on today), line numbers, the selection and fold margins, visible whitespace and line-end markers, and indentation guides.
+- **More languages and manual language selection**: the language is chosen from the file extension today, and unknown extensions fall back to C/C++ highlighting. Lexilla already provides lexers for many languages that are not enabled yet, for example YAML, TOML, PowerShell, Ruby, Perl and Lua, and a language picker would let you override the automatic choice.
+- **Encoding and line endings**: show the encoding (ASCII, UTF-8, UTF-16) and the line-ending style (CRLF, LF, CR) of the active document in the status bar, and convert between them. Today the encoding is detected when a file is opened and preserved when it is saved, but it can neither be seen nor changed.
+
+### Later (planned, larger efforts)
+
+- **Word and keyword completion**: suggest words from the current document and the keywords of its language while typing, replacing the few sample completions that are built in today.
+- **Fuller session restore**: reopen each document at its last caret and scroll position and, later, recover unsaved and untitled documents after a restart or a crash. Today the session only brings back documents that were saved to a file.
+- **Find in Files**: search, and optionally replace, across all the files of a folder, with the matches listed in a results panel.
+- **Themes and dark mode**: choose a color theme for the editor and the ribbon, including a dark one. Syntax colors are fixed today.
+
+### Under consideration (ideas, not yet committed)
+
+- **Multiple selections**: edit several places at once. Scintilla supports it, but it is turned off in the editor today.
+- **Native ARM64 and high-DPI support**: a native ARM64 build for Windows on Arm devices (_IntelliEdit_ is currently built for x86 and x64) and Per-Monitor V2 DPI awareness for a sharper interface on high-DPI and mixed-DPI displays.
+- **Localized user interface**: translated menus, commands and messages (the interface is English only today).
+- **Automated builds**: a GitHub Actions workflow that builds the Win32 and x64 configurations for every pull request, so that contributions get quick feedback.
+
+### Help shape the roadmap
+
+Want to see something sooner, or have an idea that is not listed here? [Open an issue](https://github.com/mihaimoga/IntelliEdit/issues) or start a conversation in [Discussions](https://github.com/mihaimoga/IntelliEdit/discussions). Contributions are welcome as well: any item above can be picked up through a pull request, as described in the next section. For enhancements, the issue must be approved by a project administrator (it will carry the `Accepted` label) before the pull request can be merged, so it is best to open the issue before you start coding.
+
 ## Create and Submit your Pull Request
 
 As noted in the [Contributing Rules](https://github.com/mihaimoga/IntelliEdit/blob/main/CONTRIBUTING.md) for _IntelliEdit_, all Pull Requests need to be attached to a issue on GitHub. So the first step is to create an issue which requests that the functionality be improved (if it was already there) or added (if it was not yet there); in your issue, be sure to explain that you have the functionality definition ready, and will be submitting a Pull Request. The second step is to use the GitHub interface to create the Pull Request from your fork into the main repository. The final step is to wait for and respond to feedback from the developers as needed, until such time as your PR is accepted or rejected.
